@@ -48,7 +48,7 @@ if not os.path.exists(MODEL_FILE):
     print('download model')
     opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
 else:
-    print('model exited')
+    print('model existed')
 tar_file = tarfile.open(MODEL_FILE)
 for file in tar_file.getmembers():
     file_name = os.path.basename(file.name)
