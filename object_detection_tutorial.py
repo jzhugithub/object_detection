@@ -14,7 +14,6 @@ import skimage.io
 # This is needed since the notebook is stored in the object_detection folder.
 OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
 sys.path.append("/home/zj/program/models/object_detection")
-sys.path.append("/home/zj/program/models")
 
 
 # Object detection imports
