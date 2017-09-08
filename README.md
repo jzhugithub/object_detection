@@ -29,5 +29,5 @@ Contain a class of object_detection named `DetectImage`.
 Load a video or camera to detect. 
 
 **Note**: 
-1. Opencv with ffmpeg is needed. 
+1. OpenCV with ffmpeg is needed. 
 2. Some parameters need to modify, you can find them all in DetectVideo class. 
