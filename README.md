@@ -16,7 +16,7 @@ Modify from `tensorflow/models/object_detection/object_detection_tutorial.ipynb`
 
 Use `skimage.io` to read image which is faster than `PIL`.
 
-## object_detection_pure.py
+## object_detection_image.py
 
 Load images to detect. 
 
