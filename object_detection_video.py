@@ -4,7 +4,7 @@ import os
 import cv2
 import numpy as np
 import math
-from object_detection_pure import DetectImage
+from object_detection_image import DetectImage
 
 
 class DetectVideo(object):
