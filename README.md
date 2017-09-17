@@ -31,3 +31,7 @@ Load a video or camera to detect.
 **Note**: 
 1. OpenCV with ffmpeg is needed. 
 2. Some parameters need to modify, you can find them all in DetectVideo class. 
+
+## create_tf_record.py
+
+Some parameters need to modify, you can find them at the head of file which labeled as `# modify`.
