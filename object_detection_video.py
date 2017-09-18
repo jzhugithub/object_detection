@@ -4,13 +4,14 @@ import os
 import cv2
 import numpy as np
 import math
+import time
 from object_detection_image import DetectImage
 
 
 class DetectVideo(object):
     # parameters need to modify
     # video
-    video_input_path = os.path.join(os.path.abspath('./video_input'), '328.avi')
+    video_input_path = '/home/zj/database/zmart_data/video/global_view_0826.avi'
     show_video_flag = True
     save_video_flag = False
     video_rate_defult = 30
@@ -20,10 +21,10 @@ class DetectVideo(object):
     # Create DetectImage class
     OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = os.path.join(OBJECT_DETECTION_PATH, 'ssd_mobilenet_v1_coco_11_06_2017/frozen_inference_graph.pb')
+    PATH_TO_CKPT = '/home/zj/my_workspace/zmart_object_detect/ssd_mobilenet_v1_zmart_09_17_2017/frozen_inference_graph.pb'
     # List of the strings that is used to add correct label for each box.
-    PATH_TO_LABELS = os.path.join(OBJECT_DETECTION_PATH, 'data/mscoco_label_map.pbtxt')
-    NUM_CLASSES = 90
+    PATH_TO_LABELS = '/home/zj/database_temp/zmart_data_set/zmart_label_map.pbtxt'
+    NUM_CLASSES = 2
 
 
     # parameters do not need to modify
@@ -39,6 +40,10 @@ class DetectVideo(object):
     dst = np.array([])
     # detect
     di = 'DetectImage'
+
+    # get_hz
+    frame_count = -1
+    start_time = 0
 
     def __init__(self):
         # video
@@ -79,6 +84,10 @@ class DetectVideo(object):
                 print('video end')
                 break
 
+            update, hz = self.get_hz()
+            if update:
+                print('hz: %s' % hz)
+
             # detect
             # self.src_3 = cv2.resize(self.src_3,(160, 120))
             self.dst = self.di.run_detect(self.src)[0]
@@ -92,6 +101,22 @@ class DetectVideo(object):
             # stop video vis keyboard
             if cv2.waitKey(1) >= 0:
                 stop = True
+
+    def get_hz(self):
+        self.frame_count += 1
+        update = False
+        hz = -1
+
+        if self.frame_count == 0:
+            self.start_time = time.time()
+            return update, hz
+
+        if self.frame_count % 10 == 0:
+            update = True
+            hz = 10 / (time.time() - self.start_time)
+            self.start_time = time.time()
+
+        return update, hz
 
 
 if __name__ == '__main__':
