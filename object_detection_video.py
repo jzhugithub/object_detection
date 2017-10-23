@@ -1,5 +1,10 @@
-#!/usr/bin/python2
-# -*- coding: utf-8 -*-
+#! /usr/bin/env python
+# -*- coding=utf-8 -*-
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import cv2
 import numpy as np
@@ -21,7 +26,7 @@ class DetectVideo(object):
     # Create DetectImage class
     OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = '/home/zj/my_workspace/zmart_object_detect/ssd_mobilenet_v1_zmart_09_17_2017/frozen_inference_graph.pb'
+    PATH_TO_CKPT = '/home/zj/database/model/object_detect/faster_rcnn_resnet50_zmart_0921_15hz_mAP1/frozen_inference_graph.pb'
     # List of the strings that is used to add correct label for each box.
     PATH_TO_LABELS = '/home/zj/database_temp/zmart_data_set/zmart_label_map.pbtxt'
     NUM_CLASSES = 2
@@ -77,12 +82,16 @@ class DetectVideo(object):
 
     def run(self):
         stop = False
+        # count = 1
         while not stop:
             # video
             success, self.src = self.video_cap.read()
             if not success:
                 print('video end')
                 break
+            # count += 1
+            # if count < 2500 or count > 3700:
+            #     continue
 
             update, hz = self.get_hz()
             if update:
