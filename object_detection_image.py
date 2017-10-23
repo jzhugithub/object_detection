@@ -1,3 +1,10 @@
+#! /usr/bin/env python
+# -*- coding=utf-8 -*-
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 import os
 import tensorflow as tf
@@ -6,7 +13,7 @@ import skimage.io
 import sys
 
 # Add object_detection to system path
-OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
+OBJECT_DETECTION_PATH = '/home/zj/my_workspace/object_detection/object_detection'
 sys.path.append(OBJECT_DETECTION_PATH)
 
 # Object detection imports
