@@ -1,3 +1,10 @@
+#! /usr/bin/env python
+# -*- coding=utf-8 -*-
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import hashlib
 import io
 import logging
@@ -12,26 +19,26 @@ import sys
 
 # modify
 # Add object_detection to system path
-sys.path.append('/home/zj/program/models/object_detection')
+sys.path.append('/home/zj/my_workspace/object_detection/object_detection')
 
 from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 
 # modify
-label_map_path = '/home/zj/database_temp/zmart_data_set/zmart_label_map.pbtxt'
-data_dir = '/home/zj/database_temp/zmart_data_set/global_bottom_set_0917'
-train_output_path = '/home/zj/database_temp/zmart_data_set/train.record'
-val_output_path = '/home/zj/database_temp/zmart_data_set/val.record'
+label_map_path = '/home/zj/database_temp/fisheye_data_set/fisheye1020/fisheye_label_map.pbtxt'
+data_dir = '/home/zj/database_temp/fisheye_data_set/fisheye1020'
+train_output_path = '/home/zj/database_temp/fisheye_data_set/train.record'
+val_output_path = '/home/zj/database_temp/fisheye_data_set/val.record'
 train_ratio = 0.8
 
 
 def get_class_name_from_filename(file_name):
     """Gets the class name from a file.
-  
+
     Args:
       file_name: The file name to get the class name from.
                  ie. "american_pit_bull_terrier_105.jpg"
-  
+
     Returns:
       A string of the class name.
     """
@@ -44,10 +51,10 @@ def dict_to_tf_example(data,
                        image_subdirectory,
                        ignore_difficult_instances=False):
     """Convert XML derived dict to tf.Example proto.
-  
+
     Notice that this function normalizes the bounding box coordinates provided
     by the raw data.
-  
+
     Args:
       data: dict holding PASCAL XML fields for a single image (obtained by
         running dataset_util.recursive_parse_xml_to_dict)
@@ -56,10 +63,10 @@ def dict_to_tf_example(data,
         Pascal dataset directory holding the actual image data.
       ignore_difficult_instances: Whether to skip difficult instances in the
         dataset  (default: False).
-  
+
     Returns:
       example: The converted tf.Example.
-  
+
     Raises:
       ValueError: if the image pointed to by data['filename'] is not a valid JPEG
     """
@@ -85,8 +92,7 @@ def dict_to_tf_example(data,
     poses = []
     difficult_obj = []
 
-
-    try :
+    try:
         for obj in data['object']:
             difficult = bool(int(obj['difficult']))
             if ignore_difficult_instances and difficult:
@@ -102,7 +108,6 @@ def dict_to_tf_example(data,
             poses.append(obj['pose'].encode('utf8'))
     except:
         print('no object in %s' % data['filename'])
-
 
     example = tf.train.Example(features=tf.train.Features(feature={
         'image/height': dataset_util.int64_feature(height),
@@ -133,7 +138,7 @@ def create_tf_record(output_filename,
                      image_dir,
                      examples):
     """Creates a TFRecord file from examples.
-  
+
     Args:
       output_filename: Path to where output file is saved.
       label_map_dict: The label map dictionary.
@@ -172,7 +177,7 @@ if __name__ == '__main__':
     image_dir = os.path.join(data_dir, 'images')
     annotations_dir = os.path.join(data_dir, 'annotations')
     examples_list = get_examples_list(os.path.join(data_dir, 'annotations'))
-    print examples_list
+    print(examples_list)
 
     # Test images are not included in the downloaded data set, so we shall perform
     # our own split.
