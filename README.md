@@ -55,3 +55,7 @@ Some .config files write by me.
 ## object_detection/
 
 Copy from `Tensorflow Object Detection API` in `tensorflow/models` and add my own codes.
+
+## train_log/
+
+Some logs for training.
