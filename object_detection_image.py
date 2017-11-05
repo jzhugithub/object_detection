@@ -9,7 +9,6 @@ import numpy as np
 import os
 import tensorflow as tf
 from matplotlib import pyplot as plt
-import skimage.io
 import sys
 
 # Add object_detection to system path
@@ -122,6 +121,7 @@ if __name__ == '__main__':
     PATH_TO_TEST_IMAGES_DIR = os.path.join(OBJECT_DETECTION_PATH, 'test_images')
     TEST_IMAGE_PATHS = [os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 3)]
 
+    import skimage.io
     for image_path in TEST_IMAGE_PATHS:
         image_np = skimage.io.imread(image_path)
         image_np = di.run_detect(image_np)[0]
