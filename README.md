@@ -2,9 +2,7 @@
 
 ## Before Start
 
-**To Train Model**
-
-Look at my `Evernote` for details.
+**To Run Model**
 
 Follow `Tensorflow Object Detection API` in `tensorflow/models` to prepare environment before running.
 
@@ -13,6 +11,10 @@ Tensorflow Object Detection API: https://github.com/tensorflow/models/tree/maste
 **Note**
 
 Protobuf should be 2.6 version, you can get version by `protoc --version`, upgrade Protobuf by website: http://blog.csdn.net/sparkexpert/article/details/73456767 .
+
+**To Train Model**
+
+Look at my `Evernote` for details.
 
 **To Use Own Model**
 
@@ -42,7 +44,8 @@ Load a video or camera to detect.
 
 **Note**: 
 1. OpenCV with ffmpeg is needed. 
-2. Some parameters need to modify, you can find them all in DetectVideo class. 
+2. `OBJECT_DETECTION_PATH` should be set in 'object_detection_video.py'
+3. Some parameters need to modify, you can find them all in DetectVideo class. 
 
 ## create_tf_record.py
 
