@@ -31,6 +31,7 @@ import tensorflow as tf
 from object_detection.utils import ops
 from object_detection.utils import shape_utils
 from object_detection.utils import static_shape
+from object_detection.core.layers import area_conv2d11
 
 slim = tf.contrib.slim
 
@@ -523,6 +524,144 @@ class ConvolutionalBoxPredictor(BoxPredictor):
         class_predictions_with_background = slim.conv2d(
             net, num_predictions_per_location * num_class_slots,
             [self._kernel_size, self._kernel_size], scope='ClassPredictor')
+        if self._apply_sigmoid_to_scores:
+          class_predictions_with_background = tf.sigmoid(
+              class_predictions_with_background)
+
+    combined_feature_map_shape = shape_utils.combined_static_and_dynamic_shape(
+        image_features)
+    box_encodings = tf.reshape(
+        box_encodings, tf.stack([combined_feature_map_shape[0],
+                                 combined_feature_map_shape[1] *
+                                 combined_feature_map_shape[2] *
+                                 num_predictions_per_location,
+                                 1, self._box_code_size]))
+    class_predictions_with_background = tf.reshape(
+        class_predictions_with_background,
+        tf.stack([combined_feature_map_shape[0],
+                  combined_feature_map_shape[1] *
+                  combined_feature_map_shape[2] *
+                  num_predictions_per_location,
+                  num_class_slots]))
+    return {BOX_ENCODINGS: box_encodings,
+            CLASS_PREDICTIONS_WITH_BACKGROUND:
+            class_predictions_with_background}
+
+
+class AreaConvolutionalBoxPredictor(BoxPredictor):
+  """Area Convolutional Box Predictor.
+
+  Optionally add an intermediate 1x1 area convolutional layer after features and
+  predict in parallel branches box_encodings and
+  class_predictions_with_background.
+
+  Currently this box predictor assumes that predictions are "shared" across
+  classes --- that is each anchor makes box predictions which do not depend
+  on class.
+  """
+
+  def __init__(self,
+               is_training,
+               num_classes,
+               conv_hyperparams,
+               min_depth,
+               max_depth,
+               num_layers_before_predictor,
+               use_dropout,
+               dropout_keep_prob,
+               kernel_size,
+               box_code_size,
+               apply_sigmoid_to_scores=False):
+    """Constructor.
+
+    Args:
+      is_training: Indicates whether the BoxPredictor is in training mode.
+      num_classes: number of classes.  Note that num_classes *does not*
+        include the background category, so if groundtruth labels take values
+        in {0, 1, .., K-1}, num_classes=K (and not K+1, even though the
+        assigned classification targets can range from {0,... K}).
+      conv_hyperparams: Slim arg_scope with hyperparameters for convolution ops.
+      min_depth: Minumum feature depth prior to predicting box encodings
+        and class predictions.
+      max_depth: Maximum feature depth prior to predicting box encodings
+        and class predictions. If max_depth is set to 0, no additional
+        feature map will be inserted before location and class predictions.
+      num_layers_before_predictor: Number of the additional conv layers before
+        the predictor.
+      use_dropout: Option to use dropout for class prediction or not.
+      dropout_keep_prob: Keep probability for dropout.
+        This is only used if use_dropout is True.
+      kernel_size: Size of final convolution kernel.  If the
+        spatial resolution of the feature map is smaller than the kernel size,
+        then the kernel size is automatically set to be
+        min(feature_width, feature_height).
+      box_code_size: Size of encoding for each box.
+      apply_sigmoid_to_scores: if True, apply the sigmoid on the output
+        class_predictions.
+
+    Raises:
+      ValueError: if min_depth > max_depth.
+    """
+    super(AreaConvolutionalBoxPredictor, self).__init__(is_training, num_classes)
+    if min_depth > max_depth:
+      raise ValueError('min_depth should be less than or equal to max_depth')
+    self._conv_hyperparams = conv_hyperparams
+    self._min_depth = min_depth
+    self._max_depth = max_depth
+    self._num_layers_before_predictor = num_layers_before_predictor
+    self._use_dropout = use_dropout
+    self._kernel_size = kernel_size
+    self._box_code_size = box_code_size
+    self._dropout_keep_prob = dropout_keep_prob
+    self._apply_sigmoid_to_scores = apply_sigmoid_to_scores
+
+  def _predict(self, image_features, num_predictions_per_location):
+    """Computes encoded object locations and corresponding confidences.
+
+    Args:
+      image_features: A float tensor of shape [batch_size, height, width,
+        channels] containing features for a batch of images.
+      num_predictions_per_location: an integer representing the number of box
+        predictions to be made per spatial location in the feature map.
+
+    Returns:
+      A dictionary containing the following tensors.
+        box_encodings: A float tensor of shape [batch_size, num_anchors, 1,
+          code_size] representing the location of the objects, where
+          num_anchors = feat_height * feat_width * num_predictions_per_location
+        class_predictions_with_background: A float tensor of shape
+          [batch_size, num_anchors, num_classes + 1] representing the class
+          predictions for the proposals.
+    """
+    features_height = static_shape.get_height(image_features.get_shape())
+    features_width = static_shape.get_width(image_features.get_shape())
+    features_depth = static_shape.get_depth(image_features.get_shape())
+    depth = max(min(features_depth, self._max_depth), self._min_depth)
+
+    # Add a slot for the background class.
+    num_class_slots = self.num_classes + 1
+    net = image_features
+    with slim.arg_scope(self._conv_hyperparams), \
+         slim.arg_scope([slim.dropout], is_training=self._is_training):
+      # Add additional conv layers before the predictor.
+      if depth > 0 and self._num_layers_before_predictor > 0:
+        for i in range(self._num_layers_before_predictor):
+          net = slim.conv2d(
+              net, depth, [1, 1], scope='Conv2d_%d_1x1_%d' % (i, depth))
+
+      with tf.variable_scope('areaconv2d'):
+        box_encodings = area_conv2d11(
+            inputs=net,
+            inputs_hwc=[features_height,features_width,features_depth],
+            num_outputs=num_predictions_per_location * self._box_code_size,
+            scope='BoxEncodingPredictor')
+        if self._use_dropout:
+          net = slim.dropout(net, keep_prob=self._dropout_keep_prob)
+        class_predictions_with_background = area_conv2d11(
+            inputs=net,
+            inputs_hwc=[features_height,features_width,features_depth],
+            num_outputs=num_predictions_per_location * num_class_slots,
+            scope='ClassPredictor')
         if self._apply_sigmoid_to_scores:
           class_predictions_with_background = tf.sigmoid(
               class_predictions_with_background)
