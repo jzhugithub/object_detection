@@ -1,4 +1,5 @@
 import tensorflow as tf
+slim = tf.contrib.slim
 
 def area_conv2d11(inputs, inputs_hwc, num_outputs, scope=None):
     '''
@@ -27,6 +28,7 @@ def area_conv2d11(inputs, inputs_hwc, num_outputs, scope=None):
                                                               depth_multiplier=num_outputs,
                                                               padding='VALID',
                                                               activation_fn=None,
+                                                              normalizer_fn=None,
                                                               scope='separable')
         outputs = tf.reshape(tensor=inputs_separable,
                              shape=[-1, inputs_height, inputs_width, num_outputs],
