@@ -10,7 +10,8 @@ def area_conv2d11(inputs, inputs_hwc, num_outputs, scope=None):
     :param num_outputs: Integer, the number of output filters.
     :return: A 4-D Tensor with shape [batch, height, width, num_outputs]
     '''
-    with tf.name_scope(scope):
+
+    with tf.variable_scope(scope):
         inputs_height = inputs_hwc[0]
         inputs_width = inputs_hwc[1]
         inputs_channel = inputs_hwc[2]
