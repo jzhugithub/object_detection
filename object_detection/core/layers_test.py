@@ -12,7 +12,7 @@ images_np = np.array([[[[1111, 1211], [1112, 1212], [1113, 1213]],
 
 images = tf.placeholder(tf.float32, images_np.shape)
 
-out = area_conv2d11(images, images_np.shape[1:], 6)
+out = area_conv2d11(images, images_np.shape[1:], 6, 'AreaConv2d11')
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
