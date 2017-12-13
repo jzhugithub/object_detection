@@ -33,9 +33,7 @@
 | min loss          | 3.3                                     |
 | eval mAP@0.5IOU   | 0.4624                                  |
 | train mAP@0.5IOU  | 0.8342                                  |
-| frequency         |                                         |
-|                   |                                         |
-|                   |                                         |
+| frequency         | 9-18Hz                                  |
 
 ## Faster R-CNN
 
