@@ -1,5 +1,7 @@
 # train log
 
+## SSD
+
 | items                   | values                               |
 | ----------------------- | ------------------------------------ |
 | name                    | ssd1023a                             |
@@ -17,7 +19,25 @@
 | train mAP@0.5IOU        | 0.9713                               |
 | frequency               | 8-22Hz                               |
 
+## SSD area conv
 
+| items             | values                                  |
+| ----------------- | --------------------------------------- |
+| name              | ssdac1212                               |
+| config file       | ssd_mobilenet_v1_ac_fisheye_1212.config |
+| super config name | ssd_mobilenet_v1_fisheye_1023.config    |
+| time              | 2017.12.12                              |
+| classes           | person, irobot                          |
+| box_predictor     | areaconv_box_predictor{}                |
+| num_steps         | 18000                                   |
+| min loss          | 3.3                                     |
+| eval mAP@0.5IOU   | 0.4624                                  |
+| train mAP@0.5IOU  | 0.8342                                  |
+| frequency         |                                         |
+|                   |                                         |
+|                   |                                         |
+
+## Faster R-CNN
 
 | items                     | values                                   |
 | ------------------------- | ---------------------------------------- |
