@@ -29,6 +29,7 @@ message PreprocessingStep {
     SSDRandomCrop ssd_random_crop = 21;
     SSDRandomCropPad ssd_random_crop_pad = 22;
     SSDRandomCropFixedAspectRatio ssd_random_crop_fixed_aspect_ratio = 23;
+    RandomVerticalFlip random_vertical_flip = 24;
   }
 }
 
@@ -44,6 +45,10 @@ message NormalizeImage {
 
 // Randomly horizontally mirrors the image and detections 50% of the time.
 message RandomHorizontalFlip {
+}
+
+// Randomly vertically mirrors the image and detections 50% of the time.
+message RandomVerticalFlip {
 }
 
 // Randomly scales the values of all pixels in the image by some constant value

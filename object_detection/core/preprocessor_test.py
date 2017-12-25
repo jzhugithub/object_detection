@@ -348,7 +348,7 @@ class PreprocessorTest(tf.test.TestCase):
 
   def testFlipMasks(self):
     test_mask = self.createTestMasks()
-    flipped_mask = preprocessor._flip_masks(test_mask)
+    flipped_mask = preprocessor._flip_masks_horizontal(test_mask)
     expected_mask = self.expectedMasksAfterMirroring()
     with self.test_session() as sess:
       flipped_mask, expected_mask = sess.run([flipped_mask, expected_mask])
