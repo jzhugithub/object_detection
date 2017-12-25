@@ -95,7 +95,7 @@ def get_configs_from_pipeline_file():
 
   model_config = pipeline_config.model
   if FLAGS.eval_training_data:
-      input_config = pipeline_config.train_input_reader
+      input_config = pipeline_config.eval_train_input_reader
   else:
       input_config = pipeline_config.eval_input_reader
   eval_config = pipeline_config.eval_config
