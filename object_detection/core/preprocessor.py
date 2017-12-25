@@ -183,7 +183,29 @@ def flip_boxes_vertical(boxes):
   ymin, xmin, ymax, xmax = tf.split(value=boxes, num_or_size_splits=4, axis=1)
   flipped_ymin = tf.subtract(1.0, ymax)
   flipped_ymax = tf.subtract(1.0, ymin)
-  flipped_boxes = tf.concat([flipped_ymin, xmin, flipped_ymax, ymax], 1)
+  flipped_boxes = tf.concat([flipped_ymin, xmin, flipped_ymax, xmax], 1)
+  return flipped_boxes
+
+
+def rotate90_boxes(boxes):
+  """Rotate the boxes counter-clockwise by 90 degrees.
+
+  Args:
+    boxes: rank 2 float32 tensor containing the bounding boxes -> [N, 4].
+           Boxes are in normalized form meaning their coordinates vary
+           between [0, 1].
+           Each row is in the form of [ymin, xmin, ymax, xmax].
+
+  Returns:
+    Rotated boxes.
+  """
+  # Rotate boxes.
+  ymin, xmin, ymax, xmax = tf.split(value=boxes, num_or_size_splits=4, axis=1)
+  rotated_ymin = tf.subtract(1.0, xmax)
+  rotated_ymax = tf.subtract(1.0, xmin)
+  rotated_xmin = ymin
+  rotated_xmax = ymax
+  flipped_boxes = tf.concat([rotated_ymin, rotated_xmin, rotated_ymax, rotated_xmax], 1)
   return flipped_boxes
 
 
@@ -437,6 +459,98 @@ def random_vertical_flip(
 
     # flip keypoints
     if keypoints is not None and keypoint_flip_permutation is not None:
+      raise ValueError('keypoints vertical flip is not support now')
+      # permutation = keypoint_flip_permutation
+      # keypoints = tf.cond(
+      #     do_a_flip_random,
+      #     lambda: keypoint_ops.flip_vertical(keypoints, 0.5, permutation),
+      #     lambda: keypoints)
+      # result.append(keypoints)
+
+    return tuple(result)
+
+
+def random_rotate90(
+    image,
+    boxes=None,
+    masks=None,
+    keypoints=None,
+    keypoint_rotation_permutation=None,
+    seed=None):
+  """Randomly decides whether to rotate the image counter-clockwise by 90 degrees and detections or not.
+  
+  The probability of rotating the image is 50%.
+  
+  Args:
+    image: rank 3 float32 tensor with shape [height, width, channels].
+    boxes: (optional) rank 2 float32 tensor with shape [N, 4]
+           containing the bounding boxes.
+           Boxes are in normalized form meaning their coordinates vary
+           between [0, 1].
+           Each row is in the form of [ymin, xmin, ymax, xmax].
+    masks: (optional) rank 3 float32 tensor with shape
+           [num_instances, height, width] containing instance masks. The masks
+           are of the same height, width as the input `image`.
+    keypoints: (optional) rank 3 float32 tensor with shape
+               [num_instances, num_keypoints, 2]. The keypoints are in y-x
+               normalized coordinates.
+    keypoint_rotation_permutation: rank 1 int32 tensor containing keypoint flip
+                               permutation.
+    seed: random seed
+
+  Returns:
+    image: image which is the same shape as input image.
+
+    If boxes, masks, keypoints, and keypoint_rotation_permutation is not None,
+    the function also returns the following tensors.
+
+    boxes: rank 2 float32 tensor containing the bounding boxes -> [N, 4].
+           Boxes are in normalized form meaning their coordinates vary
+           between [0, 1].
+    masks: rank 3 float32 tensor with shape [num_instances, height, width]
+           containing instance masks.
+    keypoints: rank 3 float32 tensor with shape
+               [num_instances, num_keypoints, 2]
+
+  Raises:
+    ValueError: if keypoints are provided but keypoint_rotation_permutation is not.
+  """
+  def _rotate_image(image):
+    # rotate image
+    image_rotated = tf.image.rot90(image)
+    return image_rotated
+
+  if keypoints is not None and keypoint_rotation_permutation is None:
+    raise ValueError(
+        'keypoints are provided but keypoints_rotation_permutation is not provided')
+
+  with tf.name_scope('RandomRotate90', values=[image, boxes]):
+    result = []
+    # random variable defining whether to do rotate or not
+    do_a_rotation_random = tf.random_uniform([], seed=seed)
+    # rotate only if there are bounding boxes in image!
+    do_a_rotation_random = tf.logical_and(
+        tf.greater(tf.size(boxes), 0), tf.greater(do_a_rotation_random, 0.5))
+
+    # rotate image
+    image = tf.cond(do_a_rotation_random, lambda: _rotate_image(image), lambda: image)
+    result.append(image)
+
+    # rotate boxes
+    if boxes is not None:
+      boxes = tf.cond(
+          do_a_rotation_random, lambda: rotate90_boxes(boxes), lambda: boxes)
+      result.append(boxes)
+
+    # rotate masks
+    if masks is not None:
+      raise ValueError('mask rotation is not support now')
+      # masks = tf.cond(
+      #     do_a_rotation_random, lambda: _rotate90_masks(masks), lambda: masks)
+      # result.append(masks)
+
+    # flip keypoints
+    if keypoints is not None and keypoint_rotation_permutation is not None:
       raise ValueError('keypoints vertical flip is not support now')
       # permutation = keypoint_flip_permutation
       # keypoints = tf.cond(
@@ -1936,6 +2050,10 @@ def get_default_func_arg_map(include_instance_masks=False,
                              fields.InputDataFields.groundtruth_boxes,
                              groundtruth_instance_masks,
                              groundtruth_keypoints,),
+      random_rotate90: (fields.InputDataFields.image,
+                        fields.InputDataFields.groundtruth_boxes,
+                        groundtruth_instance_masks,
+                        groundtruth_keypoints,),
       random_pixel_value_scale: (fields.InputDataFields.image,),
       random_image_scale: (fields.InputDataFields.image,
                            groundtruth_instance_masks,),

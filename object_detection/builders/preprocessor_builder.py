@@ -74,6 +74,7 @@ PREPROCESSING_FUNCTION_MAP = {
     'normalize_image': preprocessor.normalize_image,
     'random_horizontal_flip': preprocessor.random_horizontal_flip,
     'random_vertical_flip': preprocessor.random_vertical_flip,
+    'random_rotate90': preprocessor.random_rotate90,
     'random_pixel_value_scale': preprocessor.random_pixel_value_scale,
     'random_image_scale': preprocessor.random_image_scale,
     'random_rgb_to_gray': preprocessor.random_rgb_to_gray,
