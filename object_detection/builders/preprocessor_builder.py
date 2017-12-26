@@ -171,10 +171,10 @@ def build(preprocessor_step_config):
     config = preprocessor_step_config.random_crop_pad_image
     min_padded_size_ratio = config.min_padded_size_ratio
     if min_padded_size_ratio and len(min_padded_size_ratio) != 2:
-      raise ValueError('min_padded_size_ratio should have 3 elements if set!')
+      raise ValueError('min_padded_size_ratio should have 2 elements if set!')
     max_padded_size_ratio = config.max_padded_size_ratio
     if max_padded_size_ratio and len(max_padded_size_ratio) != 2:
-      raise ValueError('max_padded_size_ratio should have 3 elements if set!')
+      raise ValueError('max_padded_size_ratio should have 2 elements if set!')
     pad_color = config.pad_color
     if pad_color and len(pad_color) != 3:
       raise ValueError('pad_color should have 3 elements if set!')
@@ -186,9 +186,9 @@ def build(preprocessor_step_config):
                 'area_range': (config.min_area, config.max_area),
                 'overlap_thresh': config.overlap_thresh,
                 'random_coef': config.random_coef,
-                'min_padded_size_ratio': (min_padded_size_ratio if
+                'min_padded_size_ratio': ([min_padded_size_ratio[0], min_padded_size_ratio[1]] if
                                           min_padded_size_ratio else None),
-                'max_padded_size_ratio': (max_padded_size_ratio if
+                'max_padded_size_ratio': ([max_padded_size_ratio[0], max_padded_size_ratio[1]] if
                                           max_padded_size_ratio else None),
                 'pad_color': (pad_color if pad_color else None),
             })
