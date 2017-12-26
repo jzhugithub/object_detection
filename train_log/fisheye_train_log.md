@@ -29,10 +29,10 @@
 | time              | 2017.12.12                              |
 | classes           | person, irobot                          |
 | box_predictor     | areaconv_box_predictor{}                |
-| num_steps         | 18000                                   |
+| num_steps         | 24000                                   |
 | min loss          | 3.3                                     |
-| eval mAP@0.5IOU   | 0.4624                                  |
-| train mAP@0.5IOU  | 0.8342                                  |
+| eval mAP@0.5IOU   | 0.6913                                  |
+| train mAP@0.5IOU  | 0.9024                                  |
 | frequency         | 9-18Hz                                  |
 
 ## Faster R-CNN
