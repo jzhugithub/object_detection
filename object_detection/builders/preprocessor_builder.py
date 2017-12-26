@@ -164,7 +164,7 @@ def build(preprocessor_step_config):
             {
                 'min_image_size': min_image_size,
                 'max_image_size': max_image_size,
-                'pad_color': pad_color,
+                'pad_color': [pad_color[0], pad_color[1], pad_color[2]],
             })
 
   if step_type == 'random_crop_pad_image':
@@ -190,7 +190,7 @@ def build(preprocessor_step_config):
                                           min_padded_size_ratio else None),
                 'max_padded_size_ratio': ([max_padded_size_ratio[0], max_padded_size_ratio[1]] if
                                           max_padded_size_ratio else None),
-                'pad_color': (pad_color if pad_color else None),
+                'pad_color': ([pad_color[0], pad_color[1], pad_color[2]] if pad_color else None),
             })
 
   if step_type == 'random_resize_method':
