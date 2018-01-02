@@ -1,6 +1,8 @@
 import tensorflow as tf
 import numpy as np
-from layers import *
+from layers import area_conv2d11
+from layers import create_mask4
+from layers import gradient_conv2d411
 
 def area_conv2d11_test():
     images_np = np.array([[[[1111, 1211], [1112, 1212], [1113, 1213]],
