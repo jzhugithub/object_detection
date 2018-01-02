@@ -19,6 +19,28 @@
 | train mAP@0.5IOU        | 0.9713                               |
 | frequency               | 8-22Hz                               |
 
+
+
+| items                     | values                               |
+| ------------------------- | ------------------------------------ |
+| name                      | ssd1028                              |
+| config file               | ssd_mobilenet_v1_fisheye_1228.config |
+| super config name         | ssd_mobilenet_v1_fisheye_1023.config |
+| time                      | 2017.12.28                           |
+| classes                   | person, irobot                       |
+| decay_steps               | 500                                  |
+| data_augmentation_options | resize_image{600}                    |
+| data_augmentation_options | random_vertical_flip                 |
+| data_augmentation_options | random_rotate90                      |
+| data_augmentation_options | random_crop_pad_image                |
+| num_steps                 | 20000                                |
+| min loss                  | 3.950                                |
+| eval mAP@0.5IOU           | 0.8755                               |
+| train mAP@0.5IOU          | 0.9301                               |
+| frequency                 | 8-22Hz                               |
+
+
+
 ## SSD area conv
 
 | items             | values                                  |
@@ -34,6 +56,46 @@
 | eval mAP@0.5IOU   | 0.6913                                  |
 | train mAP@0.5IOU  | 0.9024                                  |
 | frequency         | 9-18Hz                                  |
+
+
+
+| items                     | values                                  |
+| ------------------------- | --------------------------------------- |
+| name                      | ssdac1226                               |
+| config file               | ssd_mobilenet_v1_ac_fisheye_1226.config |
+| super config name         | ssd_mobilenet_v1_ac_fisheye_1212.config |
+| time                      | 2017.12.26                              |
+| classes                   | person, irobot                          |
+| data_augmentation_options | resize_image{600}                       |
+| data_augmentation_options | random_vertical_flip                    |
+| data_augmentation_options | random_rotate90                         |
+| data_augmentation_options | random_crop_pad_image                   |
+| num_steps                 | 34k                                     |
+| min loss                  | 1.78                                    |
+| eval mAP@0.5IOU           | 0.8524                                  |
+| train mAP@0.5IOU          | 0.8982                                  |
+| frequency                 | 9-18Hz                                  |
+
+
+
+## SSD gradient conv
+
+| items             | values                                  |
+| ----------------- | --------------------------------------- |
+| name              | ssdgc0102                               |
+| config file       | ssd_mobilenet_v1_gc_fisheye_0102.config |
+| super config name | ssd_mobilenet_v1_ac_fisheye_1226.config |
+| time              | 2018.01.02                              |
+| classes           | person, irobot                          |
+| box_predictor     | gradientconv_box_predictor              |
+| decay_steps       | 500                                     |
+| num_steps         |                                         |
+| min loss          |                                         |
+| eval mAP@0.5IOU   |                                         |
+| train mAP@0.5IOU  |                                         |
+| frequency         |                                         |
+
+
 
 ## Faster R-CNN
 
