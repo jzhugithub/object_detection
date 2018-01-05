@@ -23,7 +23,7 @@
 
 | items                     | values                               |
 | ------------------------- | ------------------------------------ |
-| name                      | ssd1028                              |
+| name                      | ssd1228                              |
 | config file               | ssd_mobilenet_v1_fisheye_1228.config |
 | super config name         | ssd_mobilenet_v1_fisheye_1023.config |
 | time                      | 2017.12.28                           |
@@ -38,6 +38,23 @@
 | eval mAP@0.5IOU           | 0.8755                               |
 | train mAP@0.5IOU          | 0.9301                               |
 | frequency                 | 8-22Hz                               |
+
+
+
+| items             | values                                   |
+| ----------------- | ---------------------------------------- |
+| name              | ssd0250104                               |
+| config file       | ssd_mobilenet_v1_025_fisheye_0104.config |
+| super config name | ssd_mobilenet_v1_fisheye_1228.config     |
+| time              | 2018.01.04                               |
+| classes           | person, irobot                           |
+| feature_extractor | min_depth: 8                             |
+| feature_extractor | depth_multiplier: 0.25                   |
+| num_steps         | 50k                                      |
+| min loss          | 5.394                                    |
+| eval mAP@0.5IOU   | 0.8546                                   |
+| train mAP@0.5IOU  | 0.8753                                   |
+| frequency         | 11-38Hz                                  |
 
 
 
@@ -89,11 +106,11 @@
 | classes           | person, irobot                          |
 | box_predictor     | gradientconv_box_predictor              |
 | decay_steps       | 500                                     |
-| num_steps         |                                         |
-| min loss          |                                         |
-| eval mAP@0.5IOU   |                                         |
-| train mAP@0.5IOU  |                                         |
-| frequency         |                                         |
+| num_steps         | 12000                                   |
+| min loss          | 3.6                                     |
+| eval mAP@0.5IOU   | 0.8751                                  |
+| train mAP@0.5IOU  | 0.93                                    |
+| frequency         | 8-21Hz                                  |
 
 
 
