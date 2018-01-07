@@ -14,7 +14,11 @@ Protobuf should be 2.6 version, you can get version by `protoc --version`, upgra
 
 **To Train Model**
 
-Look at my `Evernote` for details.
+Look at my note in chinese for details.
+
+Link：https://pan.baidu.com/s/1i5epSVj
+
+Password：b60y
 
 **To Use Own Model**
 
