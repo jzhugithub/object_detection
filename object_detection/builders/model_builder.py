@@ -32,11 +32,13 @@ from object_detection.models import faster_rcnn_resnet_v1_feature_extractor as f
 from object_detection.models.ssd_inception_v2_feature_extractor import SSDInceptionV2FeatureExtractor
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1FeatureExtractor
 from object_detection.protos import model_pb2
+from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1FPNFeatureExtractor
 
 # A map of names to SSD feature extractors.
 SSD_FEATURE_EXTRACTOR_CLASS_MAP = {
     'ssd_inception_v2': SSDInceptionV2FeatureExtractor,
     'ssd_mobilenet_v1': SSDMobileNetV1FeatureExtractor,
+    'ssd_mobilenet_v1_fpn': SSDMobileNetV1FPNFeatureExtractor,
 }
 
 # A map of names to Faster R-CNN feature extractors.
