@@ -100,7 +100,7 @@ class SSDMobileNetV1FeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
 
     return feature_maps.values()
 
-class SSDMobileNetV1FPNFeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
+class SSDMobileNetV1RetinaNetFeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
   """SSD Feature Extractor using MobilenetV1 features."""
 
   def __init__(self,
@@ -116,7 +116,7 @@ class SSDMobileNetV1FPNFeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
       conv_hyperparams: tf slim arg_scope for conv2d and separable_conv2d ops.
       reuse_weights: Whether to reuse variables. Default is None.
     """
-    super(SSDMobileNetV1FPNFeatureExtractor, self).__init__(
+    super(SSDMobileNetV1RetinaNetFeatureExtractor, self).__init__(
         depth_multiplier, min_depth, conv_hyperparams, reuse_weights)
 
   def preprocess(self, resized_inputs):
@@ -167,7 +167,7 @@ class SSDMobileNetV1FPNFeatureExtractor(ssd_meta_arch.SSDFeatureExtractor):
               min_depth=self._min_depth,
               depth_multiplier=self._depth_multiplier,
               scope=scope)
-          feature_maps = feature_map_generators.fpn_multi_resolution_feature_maps(
+          feature_maps = feature_map_generators.retinanet_multi_resolution_feature_maps(
               feature_map_layout=feature_map_layout,
               depth_multiplier=self._depth_multiplier,
               min_depth=self._min_depth,

@@ -26,6 +26,7 @@ of final feature maps.
 import collections
 import tensorflow as tf
 from object_detection.utils import ops
+from object_detection.utils import static_shape
 slim = tf.contrib.slim
 
 
@@ -179,8 +180,8 @@ def multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
       [(x, y) for (x, y) in zip(feature_map_keys, feature_maps)])
 
 
-def fpn_multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
-                                  min_depth, insert_1x1_conv, image_features):
+def retinanet_multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
+                                            min_depth, insert_1x1_conv, image_features):
   """Generates multi resolution feature maps from input image features.
 
   Generates multi-scale feature maps for detection as in the SSD papers by
@@ -309,5 +310,40 @@ def fpn_multi_resolution_feature_maps(feature_map_layout, depth_multiplier,
             stride * feature_map_strides[index - 1])
       feature_map_keys.append(layer_name)
     feature_maps.append(feature_map)
-  return collections.OrderedDict(
-      [(x, y) for (x, y) in zip(feature_map_keys, feature_maps)])
+
+  # add top-down layers for RetinaNet
+  retinanet_feature_map_keys = []
+  retinanet_feature_maps = []
+
+  for index, (from_map_key, from_map) in enumerate(zip(feature_map_keys[::-1], feature_maps[::-1])):
+    if index == 0:
+      retinanet_feature_map_keys.append(from_map_key)
+      retinanet_feature_maps.append(from_map)
+    else:
+      top_map_key = retinanet_feature_map_keys[-1]
+      top_map = retinanet_feature_maps[-1]
+
+      from_map_height = static_shape.get_height(from_map.get_shape())
+      from_map_width = static_shape.get_width(from_map.get_shape())
+      top_map_depth = static_shape.get_depth(top_map.get_shape())
+
+      top_map_upsample = tf.image.resize_images(images=top_map,
+                                                size=[from_map_height, from_map_width],
+                                                method=1)
+      from_map_lateral_key = from_map_key + '_lateral'
+      from_map_lateral = slim.conv2d(from_map,
+                                     top_map_depth, [1, 1],
+                                     padding='SAME',
+                                     stride=1,
+                                     scope=from_map_lateral_key)
+      this_map_add = top_map_upsample + from_map_lateral
+      this_map_key = from_map_key + '_out'
+      this_map = slim.conv2d(this_map_add,
+                             top_map_depth, [3, 3],
+                             padding='SAME',
+                             stride=1,
+                             scope=this_map_key)
+      retinanet_feature_map_keys.append(this_map_key)
+      retinanet_feature_maps.append(this_map)
+
+  return collections.OrderedDict([(x, y) for (x, y) in zip(retinanet_feature_map_keys, retinanet_feature_maps)])
