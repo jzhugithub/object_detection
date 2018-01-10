@@ -26,6 +26,6 @@ python my_workspace/object_detection/object_detection/eval_once.py \
     --checkpoint_dir=${CHECKPOINT_DIR} \
     --eval_dir=${EVAL_DIR}/eval_train
 echo 'wait next turn'
-sleep 120
+sleep 580
 done
 
