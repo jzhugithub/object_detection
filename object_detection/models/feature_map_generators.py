@@ -346,4 +346,8 @@ def retinanet_multi_resolution_feature_maps(feature_map_layout, depth_multiplier
       retinanet_feature_map_keys.append(this_map_key)
       retinanet_feature_maps.append(this_map)
 
+  # low layer first
+  retinanet_feature_map_keys = retinanet_feature_map_keys[::-1]
+  retinanet_feature_maps = retinanet_feature_maps[::-1]
+
   return collections.OrderedDict([(x, y) for (x, y) in zip(retinanet_feature_map_keys, retinanet_feature_maps)])
