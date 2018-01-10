@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PIPELINE_CONFIG_PATH=/home/zj/my_workspace/object_detection/configs/ssd_mobilenet_v1_fpn_fisheye_0108.config
+PIPELINE_CONFIG_PATH=/home/zj/my_workspace/object_detection/configs/ssd_mobilenet_v1_re_fisheye_0108.config
 # PATH_TO_YOUR_PIPELINE_CONFIG, example: data/pipeline.config
 
 CHECKPOINT_DIR=/home/zj/my_workspace/fisheye_object_detect/models/model/train

@@ -95,6 +95,24 @@
 
 
 
+## SSD retina
+
+| items             | values                                  |
+| ----------------- | --------------------------------------- |
+| name              | ssdre0108                               |
+| config file       | ssd_mobilenet_v1_re_fisheye_0108.config |
+| super config name | ssd_mobilenet_v1_fisheye_1228.config    |
+| time              | 2018.1.8                                |
+| classes           | person, irobot                          |
+| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'      |
+| num_steps         | 11.82k                                  |
+| min loss          | 1,9                                     |
+| eval mAP@0.5IOU   | 0.8950                                  |
+| train mAP@0.5IOU  | 0.9214                                  |
+| frequency         | 8-17Hz                                  |
+
+
+
 ## SSD gradient conv
 
 | items             | values                                  |
