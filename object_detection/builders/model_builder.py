@@ -33,12 +33,14 @@ from object_detection.models.ssd_inception_v2_feature_extractor import SSDIncept
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1FeatureExtractor
 from object_detection.protos import model_pb2
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1RetinaNetFeatureExtractor
+from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1RetinaNetDepthwiseFeatureExtractor
 
 # A map of names to SSD feature extractors.
 SSD_FEATURE_EXTRACTOR_CLASS_MAP = {
     'ssd_inception_v2': SSDInceptionV2FeatureExtractor,
     'ssd_mobilenet_v1': SSDMobileNetV1FeatureExtractor,
     'ssd_mobilenet_v1_retinanet': SSDMobileNetV1RetinaNetFeatureExtractor,
+    'ssd_mobilenet_v1_retinanet_depthwise':SSDMobileNetV1RetinaNetDepthwiseFeatureExtractor,
 }
 
 # A map of names to Faster R-CNN feature extractors.
