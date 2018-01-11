@@ -338,11 +338,19 @@ def retinanet_multi_resolution_feature_maps(feature_map_layout, depth_multiplier
                                      scope=from_map_lateral_key)
       this_map_add = top_map_upsample + from_map_lateral
       this_map_key = from_map_key + '_out'
-      this_map = slim.conv2d(this_map_add,
-                             top_map_depth, [3, 3],
-                             padding='SAME',
-                             stride=1,
-                             scope=this_map_key)
+      if use_depthwise:
+        this_map = slim.separable_conv2d(this_map_add,
+                                         top_map_depth, [3, 3],
+                                         depth_multiplier=1,
+                                         stride=1,
+                                         padding='SAME',
+                                         scope=this_map_key)
+      else:
+        this_map = slim.conv2d(this_map_add,
+                               top_map_depth, [3, 3],
+                               padding='SAME',
+                               stride=1,
+                               scope=this_map_key)
       retinanet_feature_map_keys.append(this_map_key)
       retinanet_feature_maps.append(this_map)
 
