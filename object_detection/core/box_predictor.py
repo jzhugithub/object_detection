@@ -915,25 +915,32 @@ class RetinaNetBoxPredictor(BoxPredictor):
 
     # Add a slot for the background class.
     num_class_slots = self.num_classes + 1
-    net = image_features
+    net_cls = image_features
+    net_reg = image_features
     with slim.arg_scope(self._conv_hyperparams), \
          slim.arg_scope([slim.dropout], is_training=self._is_training):
       # Add additional conv layers before the predictor.
       if depth > 0 and self._num_layers_before_predictor > 0:
         for i in range(self._num_layers_before_predictor):
-          net = slim.conv2d(
-              net, depth, [1, 1], scope='Conv2d_%d_1x1_%d' % (i, depth))
+          net_cls = slim.conv2d(net_cls, depth, [3, 3], padding='SAME',
+                                reuse=True, scope='Conv2d_cls_%d_3x3_%d' % (i, depth))
+          net_reg = slim.conv2d(net_reg, depth, [3, 3], padding='SAME',
+                                reuse=True, scope='Conv2d_reg_%d_3x3_%d' % (i, depth))
+
       with slim.arg_scope([slim.conv2d], activation_fn=None,
                           normalizer_fn=None, normalizer_params=None):
-        box_encodings = slim.conv2d(
-            net, num_predictions_per_location * self._box_code_size,
-            [self._kernel_size, self._kernel_size],
-            scope='BoxEncodingPredictor')
+        box_encodings = slim.conv2d(net_reg,
+                                    num_predictions_per_location * self._box_code_size,
+                                    [self._kernel_size, self._kernel_size],
+                                    reuse=True,
+                                    scope='BoxEncodingPredictor')
         if self._use_dropout:
-          net = slim.dropout(net, keep_prob=self._dropout_keep_prob)
-        class_predictions_with_background = slim.conv2d(
-            net, num_predictions_per_location * num_class_slots,
-            [self._kernel_size, self._kernel_size], scope='ClassPredictor')
+          net_cls = slim.dropout(net_cls, keep_prob=self._dropout_keep_prob)
+        class_predictions_with_background = slim.conv2d(net_cls,
+                                                        num_predictions_per_location * num_class_slots,
+                                                        [self._kernel_size, self._kernel_size],
+                                                        reuse=True,
+                                                        scope='ClassPredictor')
         if self._apply_sigmoid_to_scores:
           class_predictions_with_background = tf.sigmoid(
               class_predictions_with_background)
