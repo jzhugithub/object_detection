@@ -113,6 +113,22 @@
 
 
 
+| items                                 | values                                  |
+| ------------------------------------- | --------------------------------------- |
+| name                                  | ssdre0110                               |
+| config file                           | ssd_mobilenet_v1_re_fisheye_0110.config |
+| super config name                     | ssd_mobilenet_v1_re_fisheye_0108.config |
+| time                                  | 2018.1.10                               |
+| classes                               | person, irobot                          |
+| anchor_generator{ssd_anchor_generator | min_scale: 0.04                         |
+| num_steps                             | 10.97k                                  |
+| min loss                              | 2.14                                    |
+| eval mAP@0.5IOU                       | 0.9793                                  |
+| train mAP@0.5IOU                      | 0.9864                                  |
+| frequency                             | 8-22Hz                                  |
+
+
+
 ## SSD gradient conv
 
 | items             | values                                  |
