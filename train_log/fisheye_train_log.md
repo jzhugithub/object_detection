@@ -58,6 +58,22 @@
 
 
 
+| items             | values                                   |
+| ----------------- | ---------------------------------------- |
+| name              | ssd05voc0112                             |
+| config file       | ssd_mobilenet_v1_05_voc12_0112.config    |
+| super config name | ssd_mobilenet_v1_05_re_voc12_0111.config |
+| time              | 2018.1.12                                |
+| classes           | 20                                       |
+| feature_extractor | type: 'ssd_mobilenet_v1'                 |
+| num_steps         |                                          |
+| min loss          |                                          |
+| eval mAP@0.5IOU   |                                          |
+| train mAP@0.5IOU  |                                          |
+| frequency         |                                          |
+
+
+
 ## SSD area conv
 
 | items             | values                                  |
@@ -142,6 +158,22 @@
 | eval mAP@0.5IOU   | 0.8953                                   |
 | train mAP@0.5IOU  | 0.9574                                   |
 | frequency         | 9-33Hz                                   |
+
+
+
+| items             | values                                   |
+| ----------------- | ---------------------------------------- |
+| name              | ssd05revoc0111                           |
+| config file       | ssd_mobilenet_v1_05_re_voc12_0111.config |
+| super config name | ssd_mobilenet_v1_voc12.config            |
+| time              | 2018.1.11                                |
+| classes           | 20                                       |
+| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'       |
+| num_steps         | 53.88k                                   |
+| min loss          | 4.953                                    |
+| eval mAP@0.5IOU   | 0.3256                                   |
+| train mAP@0.5IOU  | 0.5218                                   |
+| frequency         |                                          |
 
 
 
