@@ -232,8 +232,7 @@ class SSDMobileNetV1RetinaNetDepthwiseFeatureExtractor(ssd_meta_arch.SSDFeatureE
         'from_layer': ['Conv2d_11_pointwise', 'Conv2d_13_pointwise', '', '',
                        '', ''],
         'layer_depth': [-1, -1, 512, 256, 256, 128],
-        'use_depthwise': True
-
+        'use_depthwise': True,
     }
 
     with tf.control_dependencies([shape_assert]):
