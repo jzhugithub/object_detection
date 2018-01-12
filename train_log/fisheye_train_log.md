@@ -66,10 +66,10 @@
 | time              | 2018.1.12                                |
 | classes           | 20                                       |
 | feature_extractor | type: 'ssd_mobilenet_v1'                 |
-| num_steps         |                                          |
-| min loss          |                                          |
-| eval mAP@0.5IOU   |                                          |
-| train mAP@0.5IOU  |                                          |
+| num_steps         | 74.45k                                   |
+| min loss          | 5.395                                    |
+| eval mAP@0.5IOU   | 0.3614                                   |
+| train mAP@0.5IOU  | 0.7284                                   |
 | frequency         |                                          |
 
 
