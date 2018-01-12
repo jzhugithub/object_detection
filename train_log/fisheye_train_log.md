@@ -113,6 +113,22 @@
 
 ## SSD retina
 
+| items             | values                                   |
+| ----------------- | ---------------------------------------- |
+| name              | ssd05revoc0111                           |
+| config file       | ssd_mobilenet_v1_05_re_voc12_0111.config |
+| super config name | ssd_mobilenet_v1_voc12.config            |
+| time              | 2018.1.11                                |
+| classes           | 20                                       |
+| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'       |
+| num_steps         | 53.88k                                   |
+| min loss          | 4.953                                    |
+| eval mAP@0.5IOU   | 0.3256                                   |
+| train mAP@0.5IOU  | 0.5218                                   |
+| frequency         |                                          |
+
+
+
 | items             | values                                  |
 | ----------------- | --------------------------------------- |
 | name              | ssdre0108                               |
@@ -139,8 +155,8 @@
 | anchor_generator{ssd_anchor_generator} | min_scale: 0.04                         |
 | num_steps                              | 10.97k                                  |
 | min loss                               | 2.14                                    |
-| eval mAP@0.5IOU                        | 0.9793                                  |
-| train mAP@0.5IOU                       | 0.9864                                  |
+| eval mAP@0.5IOU                        | **0.9793**                              |
+| train mAP@0.5IOU                       | **0.9864**                              |
 | frequency                              | 8-22Hz                                  |
 
 
@@ -161,19 +177,19 @@
 
 
 
-| items             | values                                   |
-| ----------------- | ---------------------------------------- |
-| name              | ssd05revoc0111                           |
-| config file       | ssd_mobilenet_v1_05_re_voc12_0111.config |
-| super config name | ssd_mobilenet_v1_voc12.config            |
-| time              | 2018.1.11                                |
-| classes           | 20                                       |
-| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'       |
-| num_steps         | 53.88k                                   |
-| min loss          | 4.953                                    |
-| eval mAP@0.5IOU   | 0.3256                                   |
-| train mAP@0.5IOU  | 0.5218                                   |
-| frequency         |                                          |
+| items                | values                                   |
+| -------------------- | ---------------------------------------- |
+| name                 | ssd05re0112                              |
+| config file          | ssd_mobilenet_v1_05_re_fisheye_0112.config |
+| super config name    | ssd_mobilenet_v1_05_re_fisheye_0111.config |
+| time                 | 2018.1.12                                |
+| classes              | person, irobot                           |
+| fine_tune_checkpoint | ssd05revoc0111/model.ckpt                |
+| num_steps            | 18.01k                                   |
+| min loss             | 3.345                                    |
+| eval mAP@0.5IOU      | 0.9633                                   |
+| train mAP@0.5IOU     | 0.9848                                   |
+| frequency            | 8-29Hz                                   |
 
 
 
