@@ -47,6 +47,25 @@ def build(argscope_fn, box_predictor_config, is_training, num_classes):
 
   box_predictor_oneof = box_predictor_config.WhichOneof('box_predictor_oneof')
 
+  if  box_predictor_oneof == 'retinanet_box_predictor':
+    conv_box_predictor = box_predictor_config.retinanet_box_predictor
+    conv_hyperparams = argscope_fn(conv_box_predictor.conv_hyperparams,
+                                   is_training)
+    box_predictor_object = box_predictor.RetinaNetBoxPredictor(
+        is_training=is_training,
+        num_classes=num_classes,
+        conv_hyperparams=conv_hyperparams,
+        min_depth=conv_box_predictor.min_depth,
+        max_depth=conv_box_predictor.max_depth,
+        num_layers_before_predictor=(conv_box_predictor.
+                                     num_layers_before_predictor),
+        use_dropout=conv_box_predictor.use_dropout,
+        dropout_keep_prob=conv_box_predictor.dropout_keep_probability,
+        kernel_size=conv_box_predictor.kernel_size,
+        box_code_size=conv_box_predictor.box_code_size,
+        apply_sigmoid_to_scores=conv_box_predictor.apply_sigmoid_to_scores)
+    return box_predictor_object
+
   if  box_predictor_oneof == 'gradientconv_box_predictor':
     conv_box_predictor = box_predictor_config.gradientconv_box_predictor
     conv_hyperparams = argscope_fn(conv_box_predictor.conv_hyperparams,
