@@ -193,6 +193,23 @@
 
 
 
+| items                | values                                   |
+| -------------------- | ---------------------------------------- |
+| name                 | ssd05re0112_2                            |
+| config file          | ssd_mobilenet_v1_05_re_fisheye_0112_2.config |
+| super config name    | ssd_mobilenet_v1_05_re_fisheye_0112.config |
+| time                 | 2018.1.12                                |
+| classes              | person, irobot                           |
+| ssd_anchor_generator | reduce_boxes_in_lowest_layer:false       |
+| ssd_anchor_generator | aspect_ratios:0.5,1.0,2.0                |
+| num_steps            | 25k                                      |
+| min loss             | 3.433                                    |
+| eval mAP@0.5IOU      | 0.9599                                   |
+| train mAP@0.5IOU     | 0.9876                                   |
+| frequency            | 7-30Hz                                   |
+
+
+
 ## SSD gradient conv
 
 | items             | values                                  |
