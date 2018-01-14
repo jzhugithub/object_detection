@@ -113,22 +113,6 @@
 
 ## SSD retina
 
-| items             | values                                   |
-| ----------------- | ---------------------------------------- |
-| name              | ssd05revoc0111                           |
-| config file       | ssd_mobilenet_v1_05_re_voc12_0111.config |
-| super config name | ssd_mobilenet_v1_voc12.config            |
-| time              | 2018.1.11                                |
-| classes           | 20                                       |
-| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'       |
-| num_steps         | 53.88k                                   |
-| min loss          | 4.953                                    |
-| eval mAP@0.5IOU   | 0.3256                                   |
-| train mAP@0.5IOU  | 0.5218                                   |
-| frequency         |                                          |
-
-
-
 | items             | values                                  |
 | ----------------- | --------------------------------------- |
 | name              | ssdre0108                               |
@@ -158,6 +142,22 @@
 | eval mAP@0.5IOU                        | **0.9793**                              |
 | train mAP@0.5IOU                       | **0.9864**                              |
 | frequency                              | 8-22Hz                                  |
+
+## 
+
+| items             | values                                   |
+| ----------------- | ---------------------------------------- |
+| name              | ssd05revoc0111                           |
+| config file       | ssd_mobilenet_v1_05_re_voc12_0111.config |
+| super config name | ssd_mobilenet_v1_voc12.config            |
+| time              | 2018.1.11                                |
+| classes           | 20                                       |
+| feature_extractor | type: 'ssd_mobilenet_v1_retinanet'       |
+| num_steps         | 53.88k                                   |
+| min loss          | 4.953                                    |
+| eval mAP@0.5IOU   | 0.3256                                   |
+| train mAP@0.5IOU  | 0.5218                                   |
+| frequency         |                                          |
 
 
 
@@ -207,6 +207,22 @@
 | eval mAP@0.5IOU      | 0.9599                                   |
 | train mAP@0.5IOU     | 0.9876                                   |
 | frequency            | 7-30Hz                                   |
+
+
+
+| items               | values                                   |
+| ------------------- | ---------------------------------------- |
+| name                | ssd05_400re0113                          |
+| config file         | ssd_mobilenet_v1_05_400_re_fisheye_0113.config |
+| super config name   | ssd_mobilenet_v1_05_re_fisheye_0112_2.config |
+| time                | 2018.1.13                                |
+| classes             | person, irobot                           |
+| fixed_shape_resizer | 400,400                                  |
+| num_steps           | 20k                                      |
+| min loss            | 3.641                                    |
+| eval mAP@0.5IOU     | 0.9353                                   |
+| train mAP@0.5IOU    | 0.9799                                   |
+| frequency           | 7-27Hz                                   |
 
 
 
