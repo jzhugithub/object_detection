@@ -53,7 +53,20 @@ message ClassificationLoss {
     WeightedSigmoidClassificationLoss weighted_sigmoid = 1;
     WeightedSoftmaxClassificationLoss weighted_softmax = 2;
     BootstrappedSigmoidClassificationLoss bootstrapped_sigmoid = 3;
+    WeightedFocalClassificationLoss weighted_focal = 4;
   }
+}
+
+// Classification loss using a focal loss for class predictions.
+message WeightedFocalClassificationLoss {
+  // Interpolation weight between 0 and 1.
+  optional float alpha = 1 [default=0.25];
+
+  // Interpolation weight >= 0.
+  optional float gamma = 2 [default=2.0];
+
+  // Output loss per anchor.
+  optional bool anchorwise_output = 3 [default=false];
 }
 
 // Classification loss using a sigmoid function over class predictions.

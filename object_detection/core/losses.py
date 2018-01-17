@@ -36,6 +36,9 @@ from object_detection.utils import ops
 
 slim = tf.contrib.slim
 
+from tensorflow.python.framework import ops
+from tensorflow.python.ops import nn_ops
+
 
 class Loss(object):
   """Abstract base class for loss functions."""
@@ -233,6 +236,140 @@ class WeightedSigmoidClassificationLoss(Loss):
           [1, 1, -1])
     per_entry_cross_ent = (tf.nn.sigmoid_cross_entropy_with_logits(
         labels=target_tensor, logits=prediction_tensor))
+    if self._anchorwise_output:
+      return tf.reduce_sum(per_entry_cross_ent * weights, 2)
+    return tf.reduce_sum(per_entry_cross_ent * weights)
+
+
+def safe_sigmoid(x, name=None):
+  '''
+  :Computes sigmoid of `x` element-wise.
+  
+  y = 1 / (1 + exp(-x))
+  
+  For x < 0, to avoid overflow in exp(-x), we reformulate the above
+  
+  y = 1 / (1 + exp(-x))
+    = exp(x) / (exp(x) * (1 + exp(-x)))
+    = exp(x) / (exp(x) + 1)
+  
+  Hence, to ensure stability and avoid overflow, the implementation uses this
+  equivalent formulation
+  
+      exp(min(x, 0)) / (1 + exp(-abs(x)))
+  
+  :param x: A Tensor.
+  :return: sigmoid(x)
+  '''
+
+  zeros = tf.zeros_like(x, dtype=x.dtype)
+  cond = (x >= zeros)
+  below_zero_logits = tf.where(cond, zeros, x)
+  neg_abs_logits = tf.where(cond, -x, x)
+  return tf.div(tf.exp(below_zero_logits), 1.0 + tf.exp(neg_abs_logits), name=name)
+
+
+def focal_sigmoid_cross_entropy_with_logits(  # pylint: disable=invalid-name
+    _sentinel=None,
+    labels=None,
+    logits=None,
+    alpha = 0.5,
+    gamma = 0.0,
+    name=None):
+  """Computes focal sigmoid cross entropy given `logits`.
+
+  Measures the probability error in discrete classification tasks in which each
+  class is independent and not mutually exclusive.  For instance, one could
+  perform multilabel classification where a picture can contain both an elephant
+  and a dog at the same time.
+
+  For brevity, let `x = logits`, `z = labels`.  The logistic loss is
+  
+        z * -alpha * (1 - sigmoid(x)) ^ gamma * log(sigmoid(x)) 
+        + (1 - z) * -(1 - alpha) * (sigmoid(x)) ^ gamma * log(1 - sigmoid(x))
+
+  `logits` and `labels` must have the same type and shape.
+
+  Args:
+    _sentinel: Used to prevent positional parameters. Internal, do not use.
+    labels: A `Tensor` of the same type and shape as `logits`.
+    logits: A `Tensor` of type `float32` or `float64`.
+    alpha: weighting factor for positive class.
+    gamma: focusing parameter in focal loss. 
+    name: A name for the operation (optional).
+
+  Returns:
+    A `Tensor` of the same shape as `logits` with the componentwise
+    logistic losses.
+
+  Raises:
+    ValueError: If `logits` and `labels` do not have the same shape.
+  """
+  # pylint: disable=protected-access
+  nn_ops._ensure_xent_args("focal_sigmoid_cross_entropy_with_logits", _sentinel,
+                           labels, logits)
+  # pylint: enable=protected-access
+
+  with ops.name_scope(name, "logistic_loss", [logits, labels]) as name:
+    logits = ops.convert_to_tensor(logits, name="logits")
+    labels = ops.convert_to_tensor(labels, name="labels")
+    try:
+      labels.get_shape().merge_with(logits.get_shape())
+    except ValueError:
+      raise ValueError("logits and labels must have the same shape (%s vs %s)" %
+                       (logits.get_shape(), labels.get_shape()))
+
+    sigmoid_x = tf.sigmoid(logits)
+    gamma_array = gamma * tf.ones_like(logits, dtype=logits.dtype)
+
+    pos_part = - labels * alpha * tf.pow( 1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x)
+    neg_part = (1.0 - labels) * (alpha - 1.0) * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+
+    return tf.add(pos_part, neg_part, name=name)
+
+
+class WeightedFocalClassificationLoss(Loss):
+  """Focal cross entropy classification loss function."""
+
+  def __init__(self, alpha = 0.25, gamma = 2.0, anchorwise_output=False):
+    """Constructor.
+
+    Args:
+      anchorwise_output: Outputs loss per anchor. (default False)
+
+    """
+    self._anchorwise_output = anchorwise_output
+    self.alpha = alpha
+    self.gamma = gamma
+
+  def _compute_loss(self,
+                    prediction_tensor,
+                    target_tensor,
+                    weights,
+                    class_indices=None):
+    """Compute loss function.
+
+    Args:
+      prediction_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing the predicted logits for each class
+      target_tensor: A float tensor of shape [batch_size, num_anchors,
+        num_classes] representing one-hot encoded classification targets
+      weights: a float tensor of shape [batch_size, num_anchors]
+      class_indices: (Optional) A 1-D integer tensor of class indices.
+        If provided, computes loss only for the specified class indices.
+
+    Returns:
+      loss: a (scalar) tensor representing the value of the loss function
+            or a float tensor of shape [batch_size, num_anchors]
+    """
+    weights = tf.expand_dims(weights, 2)
+    if class_indices is not None:
+      weights *= tf.reshape(
+          ops.indices_to_dense_vector(class_indices,
+                                      tf.shape(prediction_tensor)[2]),
+          [1, 1, -1])
+    per_entry_cross_ent = (focal_sigmoid_cross_entropy_with_logits(
+      labels=target_tensor, logits=prediction_tensor, alpha=self.alpha, gamma=self.gamma))
     if self._anchorwise_output:
       return tf.reduce_sum(per_entry_cross_ent * weights, 2)
     return tf.reduce_sum(per_entry_cross_ent * weights)
