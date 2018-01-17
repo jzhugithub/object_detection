@@ -158,4 +158,11 @@ def _build_classification_loss(loss_config):
         bootstrap_type=('hard' if config.hard_bootstrap else 'soft'),
         anchorwise_output=config.anchorwise_output)
 
+  if loss_type == 'weighted_focal':
+    config = loss_config.weighted_focal
+    return losses.WeightedFocalClassificationLoss(
+        alpha=config.alpha,
+        gamma=config.gamma,
+        anchorwise_output=config.anchorwise_output)
+
   raise ValueError('Empty loss config.')
