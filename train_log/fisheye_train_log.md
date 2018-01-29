@@ -74,6 +74,41 @@
 
 
 
+| items                 | values                                   |
+| --------------------- | ---------------------------------------- |
+| name                  | ssd05focalvoc0117                        |
+| config file           | ssd_mobilenet_v1_05_focal_voc12_0117.config |
+| super config name     | ssd_mobilenet_v1_05_voc12_0112.config    |
+| time                  | 2018.1.17                                |
+| classes               | 20                                       |
+| classification_loss   | weighted_focal{alpha:0.25, gamma:2.0}    |
+| hard_example_miner    | delete                                   |
+| initial_learning_rate | 0.0004(0-17k step), 0.004(17k- step)     |
+| num_steps             | 181k                                     |
+| min loss              | 1.611                                    |
+| eval mAP@0.5IOU       | 0.3878                                   |
+| train mAP@0.5IOU      | 0.7111                                   |
+| frequency             |                                          |
+
+
+
+| items                 | values                                   |
+| --------------------- | ---------------------------------------- |
+| name                  | ssd05focalvoc0118                        |
+| config file           | ssd_mobilenet_v1_05_focal_voc12_0118.config |
+| super config name     | ssd_mobilenet_v1_05_focal_voc12_0117.config |
+| time                  | 2018.1.18                                |
+| classes               | 20                                       |
+| weighted_focal        | alpha: 0.5                               |
+| initial_learning_rate | 0.0001(0-4k step), 0.004(2k- step)       |
+| num_steps             | 90k                                      |
+| min loss              | 2.095                                    |
+| eval mAP@0.5IOU       | 0.3915                                   |
+| train mAP@0.5IOU      | 0.6423                                   |
+| frequency             |                                          |
+
+
+
 ## SSD area conv
 
 | items             | values                                  |
