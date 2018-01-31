@@ -40,11 +40,11 @@
 | classes                  | ir, ob                                   |
 | **feature_extractor**    | **min_depth: 8, depth_multiplier: 0.5**  |
 | **fine_tune_checkpoint** | **voc**                                  |
-| num_steps(time)          |                                          |
-| min loss                 |                                          |
-| train mAP@0.5IOU         |                                          |
-| eval mAP@0.5IOU          |                                          |
-| test mAP@0.5IOU          |                                          |
+| num_steps(time)          | 22.61k(7:12)                             |
+| min loss                 | 3.262                                    |
+| train mAP@0.5IOU         | 0.8713                                   |
+| eval mAP@0.5IOU          | 0.8615                                   |
+| test mAP@0.5IOU          | 0.8779                                   |
 | frequency                |                                          |
 
 
