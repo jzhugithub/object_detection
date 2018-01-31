@@ -292,7 +292,6 @@ class SSDMetaArch(model.DetectionModel):
       else:
         box_predictor_scope = 'BoxPredictor_{}'.format(idx)
 
-      print(box_predictor_scope)
       box_predictions = self._box_predictor.predict(feature_map,
                                                     num_anchors_per_location,
                                                     box_predictor_scope)
