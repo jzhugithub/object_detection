@@ -320,6 +320,14 @@ def focal_sigmoid_cross_entropy_with_logits(  # pylint: disable=invalid-name
                        (logits.get_shape(), labels.get_shape()))
 
     sigmoid_x = tf.sigmoid(logits)
+    # sigmoid_x = safe_sigmoid(logits)
+
+    ones = tf.ones_like(logits, dtype=logits.dtype)
+    too_big = (sigmoid_x > 0.99999*ones)
+    too_small = (sigmoid_x < 0.00001*ones)
+    sigmoid_x = tf.where(too_big, 0.99999*ones, sigmoid_x)
+    sigmoid_x = tf.where(too_small, 0.00001*ones, sigmoid_x)
+
     gamma_array = gamma * tf.ones_like(logits, dtype=logits.dtype)
 
     pos_part = - labels * alpha * tf.pow( 1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x)
