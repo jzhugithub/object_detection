@@ -840,6 +840,7 @@ class RetinaNetBoxPredictor(BoxPredictor):
   def __init__(self,
                is_training,
                num_classes,
+               share_parameter,
                conv_hyperparams,
                min_depth,
                max_depth,
@@ -857,6 +858,7 @@ class RetinaNetBoxPredictor(BoxPredictor):
         include the background category, so if groundtruth labels take values
         in {0, 1, .., K-1}, num_classes=K (and not K+1, even though the
         assigned classification targets can range from {0,... K}).
+      share_parameter: Whether to share paremeters across all pyramid levels.
       conv_hyperparams: Slim arg_scope with hyperparameters for convolution ops.
       min_depth: Minumum feature depth prior to predicting box encodings
         and class predictions.
@@ -882,6 +884,7 @@ class RetinaNetBoxPredictor(BoxPredictor):
     super(RetinaNetBoxPredictor, self).__init__(is_training, num_classes)
     if min_depth > max_depth:
       raise ValueError('min_depth should be less than or equal to max_depth')
+    self._share_parameter = share_parameter
     self._conv_hyperparams = conv_hyperparams
     self._min_depth = min_depth
     self._max_depth = max_depth
@@ -923,23 +926,23 @@ class RetinaNetBoxPredictor(BoxPredictor):
       if depth > 0 and self._num_layers_before_predictor > 0:
         for i in range(self._num_layers_before_predictor):
           net_cls = slim.conv2d(net_cls, depth, [3, 3], padding='SAME',
-                                reuse=True, scope='Conv2d_cls_%d_3x3_%d' % (i, depth))
+                                reuse=tf.AUTO_REUSE, scope='Conv2d_cls_%d_3x3_%d' % (i, depth))
           net_reg = slim.conv2d(net_reg, depth, [3, 3], padding='SAME',
-                                reuse=True, scope='Conv2d_reg_%d_3x3_%d' % (i, depth))
+                                reuse=tf.AUTO_REUSE, scope='Conv2d_reg_%d_3x3_%d' % (i, depth))
 
       with slim.arg_scope([slim.conv2d], activation_fn=None,
                           normalizer_fn=None, normalizer_params=None):
         box_encodings = slim.conv2d(net_reg,
                                     num_predictions_per_location * self._box_code_size,
                                     [self._kernel_size, self._kernel_size],
-                                    reuse=True,
+                                    reuse=tf.AUTO_REUSE,
                                     scope='BoxEncodingPredictor')
         if self._use_dropout:
           net_cls = slim.dropout(net_cls, keep_prob=self._dropout_keep_prob)
         class_predictions_with_background = slim.conv2d(net_cls,
                                                         num_predictions_per_location * num_class_slots,
                                                         [self._kernel_size, self._kernel_size],
-                                                        reuse=True,
+                                                        reuse=tf.AUTO_REUSE,
                                                         scope='ClassPredictor')
         if self._apply_sigmoid_to_scores:
           class_predictions_with_background = tf.sigmoid(
