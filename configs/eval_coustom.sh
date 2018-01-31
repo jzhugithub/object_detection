@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PIPELINE_CONFIG_PATH=/home/zj/my_workspace/object_detection/configs/ssd_mobilenet_v1_025_re_fisheye_0111.config
+PIPELINE_CONFIG_PATH=/home/zj/my_workspace/object_detection/configs/ssd_mobilenet_v1_05_re_fisheye2_0131.config.config
 # PATH_TO_YOUR_PIPELINE_CONFIG, example: data/pipeline.config
 
 CHECKPOINT_DIR=/home/zj/my_workspace/fisheye_object_detect/models/model/train
@@ -26,6 +26,6 @@ python my_workspace/object_detection/object_detection/eval_once.py \
     --checkpoint_dir=${CHECKPOINT_DIR} \
     --eval_dir=${EVAL_DIR}/eval_train
 echo 'wait next turn'
-sleep 580
+sleep 500
 done
 
