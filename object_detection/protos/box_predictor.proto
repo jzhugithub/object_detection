@@ -20,6 +20,9 @@ message BoxPredictor {
 
 // Configuration proto for RetinaNet box predictor.
 message RetinaNetBoxPredictor {
+  // Whether to use depthwise conv or normal conv before the predictor.
+  optional bool use_depthwise_before_predictor = 11 [default = false];
+  
   // Whether to share paremeters across all pyramid levels.
   optional bool share_parameter = 10 [default = true];
 
