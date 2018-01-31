@@ -840,6 +840,7 @@ class RetinaNetBoxPredictor(BoxPredictor):
   def __init__(self,
                is_training,
                num_classes,
+               use_depthwise_before_predictor,
                share_parameter,
                conv_hyperparams,
                min_depth,
@@ -858,6 +859,8 @@ class RetinaNetBoxPredictor(BoxPredictor):
         include the background category, so if groundtruth labels take values
         in {0, 1, .., K-1}, num_classes=K (and not K+1, even though the
         assigned classification targets can range from {0,... K}).
+      use_depthwise_before_predictor: Whether to use depthwise conv or 
+        normal conv before the predictor.
       share_parameter: Whether to share paremeters across all pyramid levels.
       conv_hyperparams: Slim arg_scope with hyperparameters for convolution ops.
       min_depth: Minumum feature depth prior to predicting box encodings
@@ -884,6 +887,7 @@ class RetinaNetBoxPredictor(BoxPredictor):
     super(RetinaNetBoxPredictor, self).__init__(is_training, num_classes)
     if min_depth > max_depth:
       raise ValueError('min_depth should be less than or equal to max_depth')
+    self._use_depthwise_before_predictor = use_depthwise_before_predictor
     self._share_parameter = share_parameter
     self._conv_hyperparams = conv_hyperparams
     self._min_depth = min_depth
@@ -925,10 +929,21 @@ class RetinaNetBoxPredictor(BoxPredictor):
       # Add additional conv layers before the predictor.
       if depth > 0 and self._num_layers_before_predictor > 0:
         for i in range(self._num_layers_before_predictor):
-          net_cls = slim.conv2d(net_cls, depth, [3, 3], padding='SAME',
-                                reuse=tf.AUTO_REUSE, scope='Conv2d_cls_%d_3x3_%d' % (i, depth))
-          net_reg = slim.conv2d(net_reg, depth, [3, 3], padding='SAME',
-                                reuse=tf.AUTO_REUSE, scope='Conv2d_reg_%d_3x3_%d' % (i, depth))
+          if self._use_depthwise_before_predictor:
+            net_cls = slim.separable_conv2d(net_cls, None, [3, 3],depth_multiplier=1, padding='SAME',
+                                            reuse=tf.AUTO_REUSE, scope='Conv2d_cls_%d_3x3_%d_depthwise' % (i, depth))
+            net_cls = slim.conv2d(net_cls, depth, [1, 1], padding='SAME',
+                                  reuse=tf.AUTO_REUSE, scope='Conv2d_cls_%d_1x1_%d' % (i, depth))
+            net_reg = slim.separable_conv2d(net_reg, None, [3, 3], depth_multiplier=1, padding='SAME',
+                                            reuse=tf.AUTO_REUSE, scope='Conv2d_reg_%d_3x3_%d_depthwise' % (i, depth))
+            net_reg = slim.conv2d(net_reg, depth, [1, 1], padding='SAME',
+                                  reuse=tf.AUTO_REUSE, scope='Conv2d_reg_%d_1x1_%d' % (i, depth))
+          else:
+            net_cls = slim.conv2d(net_cls, depth, [3, 3], padding='SAME',
+                                  reuse=tf.AUTO_REUSE, scope='Conv2d_cls_%d_3x3_%d' % (i, depth))
+            net_reg = slim.conv2d(net_reg, depth, [3, 3], padding='SAME',
+                                  reuse=tf.AUTO_REUSE, scope='Conv2d_reg_%d_3x3_%d' % (i, depth))
+
 
       with slim.arg_scope([slim.conv2d], activation_fn=None,
                           normalizer_fn=None, normalizer_params=None):
