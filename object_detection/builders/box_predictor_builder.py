@@ -54,6 +54,7 @@ def build(argscope_fn, box_predictor_config, is_training, num_classes):
     box_predictor_object = box_predictor.RetinaNetBoxPredictor(
         is_training=is_training,
         num_classes=num_classes,
+        share_parameter = conv_box_predictor.share_parameter,
         conv_hyperparams=conv_hyperparams,
         min_depth=conv_box_predictor.min_depth,
         max_depth=conv_box_predictor.max_depth,
