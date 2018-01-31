@@ -281,7 +281,18 @@ class SSDMetaArch(model.DetectionModel):
     cls_predictions_with_background_list = []
     for idx, (feature_map, num_anchors_per_location
              ) in enumerate(zip(feature_maps, num_anchors_per_location_list)):
-      box_predictor_scope = 'BoxPredictor_{}'.format(idx)
+
+      try:
+          share_box_predictor_parameter = self._box_predictor._share_parameter
+      except:
+          share_box_predictor_parameter = False
+
+      if share_box_predictor_parameter:
+        box_predictor_scope = 'BoxPredictor_{}'.format(0)
+      else:
+        box_predictor_scope = 'BoxPredictor_{}'.format(idx)
+
+      print(box_predictor_scope)
       box_predictions = self._box_predictor.predict(feature_map,
                                                     num_anchors_per_location,
                                                     box_predictor_scope)
