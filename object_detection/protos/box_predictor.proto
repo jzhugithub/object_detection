@@ -20,6 +20,9 @@ message BoxPredictor {
 
 // Configuration proto for RetinaNet box predictor.
 message RetinaNetBoxPredictor {
+  // Whether to share paremeters across all pyramid levels.
+  optional bool share_parameter = 10 [default = true];
+
   // Hyperparameters for convolution ops used in the box predictor.
   optional Hyperparams conv_hyperparams = 1;
 
