@@ -10,6 +10,7 @@ import os
 import tensorflow as tf
 from matplotlib import pyplot as plt
 import sys
+import time
 
 # Add object_detection to system path
 OBJECT_DETECTION_PATH = '/home/zj/my_workspace/object_detection/object_detection'
@@ -91,9 +92,12 @@ class DetectImage(object):
         image_np_expanded = np.expand_dims(image_np, axis=0)
 
         # Actual detection.
+        time_begin = time.time()
         (boxes, scores, classes, num) = self.sess.run(
             [self.detection_boxes, self.detection_scores, self.detection_classes, self.num_detections],
             feed_dict={self.image_tensor: image_np_expanded})
+        time_end = time.time()
+        self.get_avg_gpu_time(time_end - time_begin)
         # Visualization of the results of a detection.
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
@@ -105,10 +109,21 @@ class DetectImage(object):
             line_thickness=8)
         return image_np, boxes, scores, classes, num
 
+    frame_count = 50
+    time_sum = 0
+    def get_avg_gpu_time(self, dt):
+        if self.frame_count == 50:
+            print('average gpu time is: {}'.format(self.time_sum / 50))
+            self.frame_count = 0
+            self.time_sum = 0
+        else:
+            self.time_sum += dt
+            self.frame_count += 1
+
 
 if __name__ == '__main__':
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = os.path.join(OBJECT_DETECTION_PATH, 'ssd_mobilenet_v1_coco_11_06_2017/frozen_inference_graph.pb')
+    PATH_TO_CKPT = '/home/zj/database_temp/ssd_mobilenet_v1_coco_11_06_2017/frozen_inference_graph.pb'
     # List of the strings that is used to add correct label for each box.
     PATH_TO_LABELS = os.path.join(OBJECT_DETECTION_PATH, 'data/mscoco_label_map.pbtxt')
     NUM_CLASSES = 90
