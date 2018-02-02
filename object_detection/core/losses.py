@@ -283,17 +283,22 @@ def focal_sigmoid_cross_entropy_with_logits(  # pylint: disable=invalid-name
   perform multilabel classification where a picture can contain both an elephant
   and a dog at the same time.
 
-  For brevity, let `x = logits`, `z = labels`.  The logistic loss is
+  For brevity, let `x = logits`, `z = labels`.  For `every row`, the logistic loss is
   
-        z * -alpha * (1 - sigmoid(x)) ^ gamma * log(sigmoid(x)) 
-        + (1 - z) * -(1 - alpha) * (sigmoid(x)) ^ gamma * log(1 - sigmoid(x))
-
+  If the background label(z[baich_i][0]) is 0: 
+        row_result = - labels * alpha * tf.pow(1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x) \
+                     - (1.0 - labels) * alpha * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+  If the background label(z[baich_i][0]) is 1: 
+        row_result = - labels * (1.0 - alpha) * tf.pow(1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x) \
+                     - (1.0 - labels) * (1.0 - alpha) * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+  
   `logits` and `labels` must have the same type and shape.
 
   Args:
     _sentinel: Used to prevent positional parameters. Internal, do not use.
     labels: A `Tensor` of the same type and shape as `logits`.
-    logits: A `Tensor` of type `float32` or `float64`.
+    logits: A `Tensor` of type `float32` or `float64`. 
+      It must be a tensor of shape [num_batch, num_classes], and first class is background.
     alpha: weighting factor for positive class.
     gamma: focusing parameter in focal loss. 
     name: A name for the operation (optional).
@@ -318,22 +323,45 @@ def focal_sigmoid_cross_entropy_with_logits(  # pylint: disable=invalid-name
     except ValueError:
       raise ValueError("logits and labels must have the same shape (%s vs %s)" %
                        (logits.get_shape(), labels.get_shape()))
+    if len(labels.get_shape().as_list()) != 2:
+      raise ValueError("logits and labels must have two dim: [num_batch, num_classes], but the shape is %s "%
+                       (logits.get_shape()))
 
     sigmoid_x = tf.sigmoid(logits)
-    # sigmoid_x = safe_sigmoid(logits)
+    log_sigmoid_x = tf.log_sigmoid(logits)
 
-    ones = tf.ones_like(logits, dtype=logits.dtype)
-    too_big = (sigmoid_x > 0.99999*ones)
-    too_small = (sigmoid_x < 0.00001*ones)
-    sigmoid_x = tf.where(too_big, 0.99999*ones, sigmoid_x)
-    sigmoid_x = tf.where(too_small, 0.00001*ones, sigmoid_x)
+    background_col = tf.slice(labels, [0, 0], [-1, 1])
+    num_classes = labels.get_shape().as_list()[1]
+    background_col = tf.matmul(background_col, tf.ones([1, num_classes], dtype=labels.dtype))
+    is_pos_label_row = background_col < 0.5
 
+    alpha_tmp = alpha * tf.ones_like(logits, dtype=logits.dtype)
+    alpha_array = tf.where(is_pos_label_row, alpha_tmp, 1.0 - alpha_tmp)
     gamma_array = gamma * tf.ones_like(logits, dtype=logits.dtype)
 
-    pos_part = - labels * alpha * tf.pow( 1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x)
-    neg_part = (1.0 - labels) * (alpha - 1.0) * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
-
+    pos_part = - labels * alpha_array * tf.pow(1.0 - sigmoid_x, gamma_array) * log_sigmoid_x
+    neg_part = - (1.0 - labels) * alpha_array * tf.pow(sigmoid_x, gamma_array) * - tf.log(1.0 + tf.exp(logits))
+    ### tf.log(1.0 - sigmoid_x) = - tf.log(1.0 + tf.exp(logits))
     return tf.add(pos_part, neg_part, name=name)
+
+    # pos_part = - labels * alpha * tf.pow(1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x) \
+    #            - (1.0 - labels) * alpha * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+    # neg_part = - labels * (1.0 - alpha) * tf.pow(1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x) \
+    #            - (1.0 - labels) * (1.0 - alpha) * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+    # return tf.where(is_pos_label_row, pos_part, neg_part, name=name)
+
+    # num_batch = labels.get_shape().as_list()[0]
+    # num_classes = labels.get_shape().as_list()[1]
+    # background_area = tf.zeros([num_batch, 1], dtype=labels.dtype)
+    # pos_area = tf.ones([num_batch, num_classes - 1], dtype=labels.dtype)
+    # area_array = tf.concat([background_area, pos_area], 1)
+    # is_pos = area_array > 0.5
+
+    # sigmoid_x = safe_sigmoid(logits)
+    # gamma_array = gamma * tf.ones_like(logits, dtype=logits.dtype)
+    # pos_part = - labels * alpha * tf.pow( 1.0 - sigmoid_x, gamma_array) * tf.log(sigmoid_x)
+    # neg_part = (1.0 - labels) * (alpha - 1.0) * tf.pow(sigmoid_x, gamma_array) * tf.log(1.0 - sigmoid_x)
+    # return tf.add(pos_part, neg_part, name=name)
 
 
 class WeightedFocalClassificationLoss(Loss):
@@ -370,17 +398,22 @@ class WeightedFocalClassificationLoss(Loss):
       loss: a (scalar) tensor representing the value of the loss function
             or a float tensor of shape [batch_size, num_anchors]
     """
+    batch_size = prediction_tensor.get_shape().as_list()[0]
+    num_anchors = prediction_tensor.get_shape().as_list()[1]
+    num_classes = prediction_tensor.get_shape().as_list()[2]
     weights = tf.expand_dims(weights, 2)
     if class_indices is not None:
       weights *= tf.reshape(
           ops.indices_to_dense_vector(class_indices,
                                       tf.shape(prediction_tensor)[2]),
           [1, 1, -1])
-    per_entry_cross_ent = (focal_sigmoid_cross_entropy_with_logits(
-      labels=target_tensor, logits=prediction_tensor, alpha=self.alpha, gamma=self.gamma))
+    per_row_cross_ent = (focal_sigmoid_cross_entropy_with_logits(
+      labels=tf.reshape(target_tensor, [-1, num_classes]),
+      logits=tf.reshape(prediction_tensor, [-1, num_classes]),
+      alpha=self.alpha, gamma=self.gamma))
     if self._anchorwise_output:
-      return tf.reduce_sum(per_entry_cross_ent * weights, 2)
-    return tf.reduce_sum(per_entry_cross_ent * weights)
+      return tf.reduce_sum(tf.reshape(per_row_cross_ent, [batch_size, num_anchors, num_classes]) * weights, 2)
+    return tf.reduce_sum(tf.reshape(per_row_cross_ent, [batch_size, num_anchors, num_classes]) * weights)
 
 
 class WeightedSoftmaxClassificationLoss(Loss):
