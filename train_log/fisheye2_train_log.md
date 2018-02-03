@@ -87,7 +87,7 @@
 
 | items                     | values                                   |
 | ------------------------- | ---------------------------------------- |
-| name                      | ssd05re0131                              |
+| name                      | ssd05re0202                              |
 | config file               | ssd_mobilenet_v1_05_re_fisheye2_0202.config |
 | super config name         | ssd_mobilenet_v1_05_re_fisheye2_0131.config |
 | time                      | 2018.1.31                                |
@@ -100,17 +100,17 @@
 | classification_loss       | weighted_focal{alpha: 0.25, gamma: 2.0}  |
 | hard_example_miner        | None                                     |
 | batch_size                | **20**                                   |
-| initial_learning_rate     | 0.0001(0-800 step), 0.004(800- step)     |
+| initial_learning_rate     | 0.0001(0-1k step), 0.004(800- step)      |
 | decay_steps               | 2000                                     |
 | decay_factor              | 0.9                                      |
 | fine_tune_checkpoint      | voc(not all parameters)                  |
 | data_augmentation_options | random_horizontal_flip，**ssd_random_crop** |
 | train_input_reader        | train_origin                             |
-| num_steps(time)           |                                          |
-| min loss                  |                                          |
-| train mAP@0.5IOU          |                                          |
-| eval mAP@0.5IOU           |                                          |
-| test mAP@0.5IOU           |                                          |
+| num_steps(time)           | 67k                                      |
+| min loss                  | 1.033                                    |
+| train mAP@0.5IOU          | 0.9809                                   |
+| eval mAP@0.5IOU           | 0.9400                                   |
+| test mAP@0.5IOU           | 0.9434                                   |
 | frequency                 |                                          |
 
 ## 
