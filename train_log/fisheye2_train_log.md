@@ -141,6 +141,38 @@
 | test mAP@0.5IOU           | 0.9347                                   |
 | frequency                 |                                          |
 
+
+
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | ssd05re0208                              |
+| config file               | ssd_mobilenet_v1_05_re_fisheye2_0203.config |
+| super config name         | ssd_mobilenet_v1_05_re_fisheye2_0208.config |
+| time                      | 2018.2.8                                 |
+| classes                   | ir, ob                                   |
+| unmatched_threshold       | 0.5                                      |
+| ssd_anchor_generator      | min_scale: 0.1, max_scale: 0.3,aspect_ratios:1,2,0.5,reduce_boxes_in_lowest_layer: false |
+| fixed_shape_resizer       | 512, 512                                 |
+| retinanet_box_predictor   | use_depthwise_before_predictor: true, share_parameter: false, num_layers_before_predictor: 2 |
+| feature_extractor         | type: 'ssd_mobilenet_v1_retinanet', depth_multiplier: 0.5 |
+| classification_loss       | weighted_focal{alpha: 0.25, gamma: 2.0}  |
+| hard_example_miner        | None                                     |
+| batch_size                | 20                                       |
+| initial_learning_rate     | 0.004                                    |
+| decay_steps               | 2000                                     |
+| decay_factor              | 0.9                                      |
+| fine_tune_checkpoint      | voc(not all parameters)                  |
+| data_augmentation_options | **random_horizontal_flip, random_vertical_flip, random_rotate90, ssd_random_crop** |
+| train_input_reader        | **train_origin**                         |
+| num_steps(time)           | 50k                                      |
+| min loss                  | 1.098                                    |
+| train mAP@0.5IOU          | 0.9194                                   |
+| eval mAP@0.5IOU           | 0.9241                                   |
+| test mAP@0.5IOU           | 0.9389                                   |
+| frequency                 |                                          |
+
 ## 
 
 ## SSD area conv
