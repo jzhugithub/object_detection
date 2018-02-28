@@ -27,7 +27,7 @@
 | train mAP@0.5IOU            | 0.9466                                   |
 | eval mAP@0.5IOU             | 0.9214                                   |
 | test mAP@0.5IOU             | 0.9368                                   |
-| frequency                   | tx2:0.2131                               |
+| frequency                   | tx2:0.938                                |
 
 ## 
 
@@ -45,7 +45,7 @@
 | train mAP@0.5IOU         | 0.8713                                   |
 | eval mAP@0.5IOU          | 0.8615                                   |
 | test mAP@0.5IOU          | 0.8779                                   |
-| frequency                | 0.1255                                   |
+| frequency                | 0.0697                                   |
 
 
 
@@ -109,7 +109,7 @@
 | train mAP@0.5IOU          | 0.9809                                   |
 | eval mAP@0.5IOU           | 0.9400                                   |
 | test mAP@0.5IOU           | 0.9434                                   |
-| frequency                 | tx2:0.1162                               |
+| frequency                 | tx2:0.0626                               |
 
 
 
@@ -171,7 +171,7 @@
 | train mAP@0.5IOU          | 0.9194                                   |
 | eval mAP@0.5IOU           | 0.9241                                   |
 | test mAP@0.5IOU           | 0.9389                                   |
-| frequency                 | tx:0.1205                                |
+| frequency                 | tx:0.0631                                |
 
 ## 
 
@@ -201,7 +201,7 @@
 | train mAP@0.5IOU          | 0.8782                                   |
 | eval mAP@0.5IOU           | 0.8659                                   |
 | test mAP@0.5IOU           | 0.8627                                   |
-| frequency                 | tx:                                      |
+| frequency                 | tx:0.0555                                |
 
 ##  
 
