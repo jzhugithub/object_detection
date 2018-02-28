@@ -27,7 +27,7 @@
 | train mAP@0.5IOU            | 0.9466                                   |
 | eval mAP@0.5IOU             | 0.9214                                   |
 | test mAP@0.5IOU             | 0.9368                                   |
-| frequency                   | tx2:0.938                                |
+| frequency                   | tx2:0.0938                               |
 
 ## 
 
