@@ -16,7 +16,7 @@ from object_detection_image import DetectImage
 class DetectVideo(object):
     # parameters need to modify
     # video
-    video_input_path = '/home/zj/database/zmart_data/video/global_view_0826.avi'
+    video_input_path = '/home/zj/database/record_fisheye_2_25/fisheye_2_25_20_07/fisheye_2_25_20_07_square.avi'
     show_video_flag = True
     save_video_flag = False
     video_rate_defult = 30
@@ -26,9 +26,11 @@ class DetectVideo(object):
     # Create DetectImage class
     OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = '/home/zj/database/model/object_detect/faster_rcnn_resnet50_zmart_0921_15hz_mAP1/frozen_inference_graph.pb'
+    PATH_TO_CKPT = '/home/zj/database/fisheye2_data/model/ssd0129/frozen_inference_graph.pb'
+    # PATH_TO_CKPT = '/home/zj/database_temp/faster_rcnn_resnet101_coco_11_06_2017/frozen_inference_graph.pb'
     # List of the strings that is used to add correct label for each box.
-    PATH_TO_LABELS = '/home/zj/database_temp/zmart_data_set/zmart_label_map.pbtxt'
+    PATH_TO_LABELS = '/home/zj/database_temp/fisheye2_data_set/fisheye2_label_map.pbtxt'
+    # PATH_TO_LABELS = '/home/zj/my_workspace/object_detection/object_detection/data/mscoco_label_map.pbtxt'
     NUM_CLASSES = 2
 
 
@@ -99,8 +101,11 @@ class DetectVideo(object):
 
             # detect
             # self.src_3 = cv2.resize(self.src_3,(160, 120))
+            cv2.cvtColor(self.src,cv2.cv.CV_BGR2RGB,self.src)# since opencv use bgr, but tensorflow use rbg
             self.dst = self.di.run_detect(self.src)[0]
-
+            cv2.cvtColor(self.dst, cv2.cv.CV_RGB2BGR,self.dst)# since opencv use bgr, but tensorflow use rbg
+            # self.dst = self.src[60:1020, 420:1380,:]
+            
             # save and show video
             if self.save_video_flag:
                 self.video_writer.write(self.dst)
