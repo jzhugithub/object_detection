@@ -4,9 +4,9 @@
 
 **To Run Model**
 
-Follow `Tensorflow Object Detection API` in `tensorflow/models` to prepare environment before running.
+Follow <a href="object_detection/g3doc/installation.md">Installation</a> to prepare environment before running.
 
-Tensorflow Object Detection API: https://github.com/tensorflow/models/tree/master/research/object_detection .
+Path of `Installation`: object_detection/g3doc/installation.md
 
 **Note**
 
