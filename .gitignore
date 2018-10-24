@@ -1,3 +1,4 @@
 *.avi
 *.pyc
 .idea
+*.record
