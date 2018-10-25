@@ -29,11 +29,13 @@ from object_detection.meta_architectures import rfcn_meta_arch
 from object_detection.meta_architectures import ssd_meta_arch
 from object_detection.models import faster_rcnn_inception_resnet_v2_feature_extractor as frcnn_inc_res
 from object_detection.models import faster_rcnn_resnet_v1_feature_extractor as frcnn_resnet_v1
+from object_detection.models import faster_rcnn_mobilenet_v1_feature_extractor as frcnn_mobilenet_v1
 from object_detection.models.ssd_inception_v2_feature_extractor import SSDInceptionV2FeatureExtractor
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1FeatureExtractor
 from object_detection.protos import model_pb2
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1RetinaNetFeatureExtractor
 from object_detection.models.ssd_mobilenet_v1_feature_extractor import SSDMobileNetV1RetinaNetDepthwiseFeatureExtractor
+# from object_detection.models.faster_rcnn_mobilenet_v1_feature_extractor import FasterRCNNMobilenetV1FeatureExtractor
 
 # A map of names to SSD feature extractors.
 SSD_FEATURE_EXTRACTOR_CLASS_MAP = {
@@ -52,7 +54,9 @@ FASTER_RCNN_FEATURE_EXTRACTOR_CLASS_MAP = {
     'faster_rcnn_resnet152':
     frcnn_resnet_v1.FasterRCNNResnet152FeatureExtractor,
     'faster_rcnn_inception_resnet_v2':
-    frcnn_inc_res.FasterRCNNInceptionResnetV2FeatureExtractor
+    frcnn_inc_res.FasterRCNNInceptionResnetV2FeatureExtractor,
+    'faster_rcnn_mobilenet_v1':
+    frcnn_mobilenet_v1.FasterRCNNMobilenetV1FeatureExtractor
 }
 
 
