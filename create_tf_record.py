@@ -25,11 +25,11 @@ from object_detection.utils import dataset_util
 from object_detection.utils import label_map_util
 
 # modify
-label_map_path = '/home/zj/database_temp/fisheye_data_set/fisheye1020/fisheye_label_map.pbtxt'
-data_dir = '/home/zj/database_temp/fisheye_data_set/fisheye1020'
-train_output_path = '/home/zj/database_temp/fisheye_data_set/train.record'
-val_output_path = '/home/zj/database_temp/fisheye_data_set/val.record'
-train_ratio = 0.8
+label_map_path = '/home/zj/database_temp/fisheye2_data_set/fisheye2_label_map.pbtxt'
+data_dir = '/home/zj/database_temp/fisheye2_data_set/train(origin)'
+train_output_path = '/home/zj/database_temp/fisheye2_data_set/train_origin.record'
+val_output_path = '/home/zj/database_temp/fisheye2_data_set/val2.record'
+train_ratio = 1
 
 
 def get_class_name_from_filename(file_name):

@@ -109,7 +109,7 @@
 | train mAP@0.5IOU          | 0.9809                                   |
 | eval mAP@0.5IOU           | 0.9400                                   |
 | test mAP@0.5IOU           | 0.9434                                   |
-| frequency                 | tx2:0.0626                               |
+| frequency                 | tx2:0.0626  titan:0.0164                 |
 
 
 
@@ -235,6 +235,222 @@
 
 
 
+## Faster-RCNN
 
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | fastermobilevoc1017                      |
+| config file               | faster_rcnn_mobilenet_v1_voc12_1017.config |
+| super config name         | faster_rcnn_resnet50_pets.config         |
+| time                      | 2018.10.25                               |
+| classes                   | voc                                      |
+| fixed_shape_resizer       | 512, 512                                 |
+| feature_extractor         | type: 'faster_rcnn_mobilenet_v1'         |
+| hard_example_miner        | None                                     |
+| batch_size                | 1                                        |
+| initial_learning_rate     | 0.0003                                   |
+| fine_tune_checkpoint      | imagenet                                 |
+| data_augmentation_options | random_horizontal_flip                   |
+| num_steps(time)           | 50k                                      |
+| min loss                  | 0.25                                     |
+| train mAP@0.5IOU          | 0.494                                    |
+| eval mAP@0.5IOU           | 0.383                                    |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          |                                          |
+| graphics memory(Titan)    |                                          |
+| frequency(TX2)            |                                          |
+| graphics memory(TX2)      |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | fastermobilefisheye1025                  |
+| config file               | faster_rcnn_mobilenet_v1_fisheye2_1025.config |
+| super config name         | faster_rcnn_mobilenet_v1_voc12_1017.config |
+| time                      | 2018.10.29                               |
+| classes                   | ir, ob                                   |
+| fixed_shape_resizer       | 512, 512                                 |
+| feature_extractor         | type: 'faster_rcnn_mobilenet_v1'         |
+| hard_example_miner        | None                                     |
+| batch_size                | 1                                        |
+| initial_learning_rate     | 0.00003                                  |
+| fine_tune_checkpoint      | voc                                      |
+| data_augmentation_options | random_horizontal_flip                   |
+| num_steps(time)           | 220k                                     |
+| min loss                  | 0.06                                     |
+| train mAP@0.5IOU          | 0.931                                    |
+| eval mAP@0.5IOU           | 0.903                                    |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          | 0.0226                                   |
+| graphics memory(Titan)    | 11776-610M=11G                           |
+| frequency(TX2)            | out of resources                         |
+| graphics memory(TX2)      | out of resources                         |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+
+
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | fasterres50fisheye1029                   |
+| config file               | faster_rcnn_resnet50_fisheye2_1029.config |
+| super config name         | faster_rcnn_mobilenet_v1_fisheye2_1025.config |
+| time                      | 2018.10.29                               |
+| classes                   | ir, ob                                   |
+| fixed_shape_resizer       | 512, 512                                 |
+| feature_extractor         | type: 'faster_rcnn_resnet50’             |
+| hard_example_miner        | None                                     |
+| batch_size                | 1                                        |
+| initial_learning_rate     | 0.00003                                  |
+| fine_tune_checkpoint      | coco                                     |
+| data_augmentation_options | random_horizontal_flip                   |
+| num_steps(time)           | 60k                                      |
+| min loss                  | 0.037                                    |
+| train mAP@0.5IOU          | 0.971                                    |
+| eval mAP@0.5IOU           | 0.963                                    |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          | 0.0959                                   |
+| graphics memory(Titan)    | 11G                                      |
+| frequency(TX2)            | out of resources                         |
+| graphics memory(TX2)      | out of resources                         |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | fasterres50400fisheye1030                |
+| config file               | faster_rcnn_resnet50_400_fisheye2_1030.config |
+| super config name         | faster_rcnn_resnet50_fisheye2_1029.config |
+| time                      | 2018.10.30                               |
+| classes                   | ir, ob                                   |
+| fixed_shape_resizer       | 400,400                                  |
+| feature_extractor         | type: 'faster_rcnn_resnet50‘             |
+| hard_example_miner        | None                                     |
+| batch_size                | 1                                        |
+| initial_learning_rate     | 0.00003                                  |
+| fine_tune_checkpoint      | coco                                     |
+| data_augmentation_options | random_horizontal_flip                   |
+| num_steps(time)           | 20k                                      |
+| min loss                  | 0.086                                    |
+| train mAP@0.5IOU          | 0.934                                    |
+| eval mAP@0.5IOU           | 0.921                                    |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          | 0.0905                                   |
+| graphics memory(Titan)    | 11G                                      |
+| frequency(TX2)            | out of resources                         |
+| graphics memory(TX2)      | out of resources                         |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | fastermobile400fisheye1030               |
+| config file               | faster_rcnn_mobilenet_v1_400_fisheye2_1030.config |
+| super config name         | faster_rcnn_mobilenet_v1_fisheye2_1025.config |
+| time                      | 2018.10.30                               |
+| classes                   | ir, ob                                   |
+| fixed_shape_resizer       | 400, 400                                 |
+| feature_extractor         | type: 'faster_rcnn_mobilenet_v1'         |
+| hard_example_miner        | None                                     |
+| batch_size                | 1                                        |
+| initial_learning_rate     | 0.00003                                  |
+| fine_tune_checkpoint      | voc                                      |
+| data_augmentation_options | random_horizontal_flip                   |
+| num_steps(time)           | 220k                                     |
+| min loss                  | 0.085                                    |
+| train mAP@0.5IOU          | 0.884                                    |
+| eval mAP@0.5IOU           | 0.861                                    |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          | 0.0214                                   |
+| graphics memory(Titan)    | 11G                                      |
+| frequency(TX2)            | out of resources                         |
+| graphics memory(TX2)      | out of resources                         |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+## YOLO
+
+| items                     | values                                   |
+| ------------------------- | ---------------------------------------- |
+| name                      | yolov3fisheye1101                        |
+| time                      | 2018.11.1                                |
+| classes                   | ir, ob                                   |
+| fixed_shape_resizer       | 512, 512                                 |
+| feature_extractor         | yolov3                                   |
+| batch_size                | 64                                       |
+| initial_learning_rate     | 0.01                                     |
+| fine_tune_checkpoint      | coco                                     |
+| data_augmentation_options | yolo                                     |
+| num_steps(time)           | 1500                                     |
+| min loss                  |                                          |
+| train mAP@0.5IOU          | 0.998 / ir, 0.994 / ob    0.994 / ir, 0.983 / ob 6:4=0.989 |
+| eval mAP@0.5IOU           | 0.998 / ir, 0.997 / ob    0.980 / ir, 0.950 / ob 6:4=0.968 |
+| test mAP@0.5IOU           |                                          |
+| frequency(Titan)          | 0.0379                                   |
+| graphics memory(Titan)    | 2499-628M = 1871M                        |
+| frequency(TX2)            | 2.1Hz                                    |
+| graphics memory(TX2)      |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+|                           |                                          |
+
+
+
+| items                     | values                           |
+| ------------------------- | -------------------------------- |
+| name                      | yolov3400fisheye1101             |
+| time                      | 2018.11.1                        |
+| classes                   | ir, ob                           |
+| fixed_shape_resizer       | 416, 416                         |
+| feature_extractor         | yolov3                           |
+| batch_size                | 64                               |
+| initial_learning_rate     | 0.01                             |
+| fine_tune_checkpoint      | coco                             |
+| data_augmentation_options | yolo                             |
+| num_steps(time)           | 1500                             |
+| min loss                  |                                  |
+| train mAP@0.5IOU          | 0.981 / ir, 0.964 / ob 6:4=0.974 |
+| eval mAP@0.5IOU           | 0.956 / ir, 0.919 / ob 6:4=0.941 |
+| test mAP@0.5IOU           |                                  |
+| frequency(Titan)          | 0.0375                           |
+| graphics memory(Titan)    | 2489M-628M = 1861M               |
+| frequency(TX2)            | 2.4Hz                            |
+| graphics memory(TX2)      |                                  |
+|                           |                                  |
+|                           |                                  |
+|                           |                                  |
+|                           |                                  |
+|                           |                                  |
+|                           |                                  |
+|                           |                                  |
+
+
+
+## 
 
 ##  

@@ -16,7 +16,7 @@ from object_detection_image import DetectImage
 class DetectVideo(object):
     # parameters need to modify
     # video
-    video_input_path = '/home/zj/database/record_fisheye_2_25/fisheye_2_25_20_07/fisheye_2_25_20_07_square.avi'
+    video_input_path = '/home/zj/database/fisheye_location_experiment_outdoor/video/fisheye_2_4_square.avi'
     show_video_flag = True
     save_video_flag = False
     video_rate_defult = 30
@@ -26,7 +26,7 @@ class DetectVideo(object):
     # Create DetectImage class
     OBJECT_DETECTION_PATH = '/home/zj/program/models/object_detection'
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = '/home/zj/database/fisheye2_data/model/ssd0129/frozen_inference_graph.pb'
+    PATH_TO_CKPT = '/home/zj/database/fisheye2_data/model/ssd0129/frozen_inference_graph.pb'# ssd0129,ssd05re0607
     # PATH_TO_CKPT = '/home/zj/database_temp/faster_rcnn_resnet101_coco_11_06_2017/frozen_inference_graph.pb'
     # List of the strings that is used to add correct label for each box.
     PATH_TO_LABELS = '/home/zj/database_temp/fisheye2_data_set/fisheye2_label_map.pbtxt'
@@ -99,6 +99,8 @@ class DetectVideo(object):
             if update:
                 print('hz: %s' % hz)
 
+            # # brightness
+            # self.src = np.uint8(np.clip((1.2 * self.src + 20), 0, 255))
             # detect
             # self.src_3 = cv2.resize(self.src_3,(160, 120))
             cv2.cvtColor(self.src,cv2.cv.CV_BGR2RGB,self.src)# since opencv use bgr, but tensorflow use rbg
