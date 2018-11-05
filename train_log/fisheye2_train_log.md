@@ -2,6 +2,8 @@
 
 ## SSD
 
+
+
 | items                       | values                                   |
 | --------------------------- | ---------------------------------------- |
 | name                        | ssd0129                                  |
@@ -29,7 +31,7 @@
 | test mAP@0.5IOU             | 0.9368                                   |
 | frequency                   | tx2:0.0938                               |
 
-## 
+##
 
 | items                    | values                                   |
 | ------------------------ | ---------------------------------------- |
@@ -48,6 +50,36 @@
 | frequency                | 0.0697                                   |
 
 
+
+| items                       | values                                   |
+| --------------------------- | ---------------------------------------- |
+| name                        | ssd1105                                  |
+| config file                 | ssd_mobilenet_v1_fisheye2_1105.config    |
+| super config name           | ssd_mobilenet_v1_fisheye2_0129.config    |
+| time                        | 2018.11.5                                |
+| classes                     | ir, ob                                   |
+| unmatched_threshold         | 0.5                                      |
+| ssd_anchor_generator        | min_scale: 0.1, max_scale: 0.3,aspect_ratios:1,2,0.5,3,0.33 |
+| fixed_shape_resizer         | **400, 400**                             |
+| convolutional_box_predictor | 0                                        |
+| feature_extractor           | type: 'ssd_mobilenet_v1'                 |
+| feature_extractor           | depth_multiplier: 1.0                    |
+| hard_example_miner          | min_negatives_per_image: 1               |
+| min_negatives_per_image     | 1                                        |
+| decay_steps                 | 2000                                     |
+| decay_factor                | 0.9                                      |
+| initial_learning_rate       | **0.0004**                               |
+| fine_tune_checkpoint        | coco                                     |
+| data_augmentation_options   | random_horizontal_flip, ssd_random_crop  |
+| train_input_reader          | train_origin                             |
+| num_steps(time)             | 14k(4h)                                  |
+| min loss                    | 3.18                                     |
+| train mAP@0.5IOU            | 0.823                                    |
+| eval mAP@0.5IOU             | 0.785                                    |
+| test mAP@0.5IOU             |                                          |
+| frequency                   | tx2: 0.0723 titan: 0.0112                |
+
+## 
 
 ## SSD retina
 

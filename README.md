@@ -1,5 +1,7 @@
 # object_detection
 
+Test with Ubuntu 14.04, Tensorflow 1.4.
+
 ## Before Start
 
 **To Run Model**
